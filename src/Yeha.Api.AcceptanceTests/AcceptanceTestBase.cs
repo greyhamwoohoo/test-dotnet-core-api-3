@@ -3,9 +3,10 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Threading.Tasks;
-using Yeha.AcceptanceTests.Infrastructure;
+using Yeha.Api;
+using Yeha.Api.AcceptanceTests.Infrastructure;
 
-namespace Yeha.AcceptanceTests
+namespace Yeha.Api.AcceptanceTests
 {
     /// <summary>
     /// This implementation uses a 'hard' port binding, a real HTTP Servier and HTTP Client. 
@@ -15,10 +16,10 @@ namespace Yeha.AcceptanceTests
     {
         public TestContext TestContext { get; set; }
 
-        protected IHost Host => _host ?? throw new System.InvalidOperationException($"You must initialize the host before accessing it. ");
+        protected IHost Host => _host ?? throw new InvalidOperationException($"You must initialize the host before accessing it. ");
 
         private IHost _host;
-        private IServiceProvider ServiceProvider => TestContext.Properties["ServiceProvider"] as IServiceProvider ?? throw new System.InvalidOperationException($"The container must be initialized and stored in the TestContext");
+        private IServiceProvider ServiceProvider => TestContext.Properties["ServiceProvider"] as IServiceProvider ?? throw new InvalidOperationException($"The container must be initialized and stored in the TestContext");
 
         private string _logPath;
 
@@ -27,23 +28,23 @@ namespace Yeha.AcceptanceTests
         {
             var testSettings = Resolve<TestSettings>();
 
-            _logPath = System.IO.Path.Combine(System.Environment.ExpandEnvironmentVariables("%TEMP%"), "Logs", $"AcceptanceTests-{DateTime.Now.ToString("yyyyMMddTHHmmssfff")}.log");
+            _logPath = System.IO.Path.Combine(Environment.ExpandEnvironmentVariables("%TEMP%"), "Logs", $"AcceptanceTests-{DateTime.Now.ToString("yyyyMMddTHHmmssfff")}.log");
 
             foreach (var key in testSettings.EnvironmentVariables.Keys)
             {
-                System.Environment.SetEnvironmentVariable(key, testSettings.EnvironmentVariables[key], EnvironmentVariableTarget.Process);
+                Environment.SetEnvironmentVariable(key, testSettings.EnvironmentVariables[key], EnvironmentVariableTarget.Process);
             }
 
-            System.Environment.SetEnvironmentVariable("ASPNETCORE_URLS", testSettings.BaseUrl);
-            System.Environment.SetEnvironmentVariable("TEST_LOG_PATH", _logPath);
+            Environment.SetEnvironmentVariable("ASPNETCORE_URLS", testSettings.BaseUrl);
+            Environment.SetEnvironmentVariable("TEST_LOG_PATH", _logPath);
 
             if (testSettings.InProcess)
             {
-                _host = Yeha.Program
+                _host = Program
                     .CreateHostBuilder()
                     .ConfigureWebHostDefaults(webBuilder =>
                     {
-               
+
                     })
                     .Build();
 
@@ -54,7 +55,7 @@ namespace Yeha.AcceptanceTests
         [TestCleanup]
         public async Task CleanupAcceptanceTestBase()
         {
-            if(_host != null)
+            if (_host != null)
             {
                 await _host.StopAsync();
                 _host.Dispose();
@@ -66,7 +67,7 @@ namespace Yeha.AcceptanceTests
 
         protected T Resolve<T>()
         {
-            return (T) ServiceProvider.GetRequiredService(typeof(T));
+            return (T)ServiceProvider.GetRequiredService(typeof(T));
         }
     }
 }

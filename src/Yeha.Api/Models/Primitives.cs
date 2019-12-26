@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Yeha.Models
+namespace Yeha.Api.Models
 {
     public class Primitives
     {

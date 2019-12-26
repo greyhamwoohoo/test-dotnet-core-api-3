@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Yeha.AcceptanceTests.Infrastructure
+namespace Yeha.Api.AcceptanceTests.Infrastructure
 {
     public class EnvironmentVariableDictionary : Dictionary<string, string>
     {

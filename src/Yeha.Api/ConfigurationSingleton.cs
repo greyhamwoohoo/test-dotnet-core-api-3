@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Yeha
+namespace Yeha.Api
 {
     /// <summary>
     /// </summary>
@@ -20,9 +20,9 @@ namespace Yeha
         {
             get
             {
-                lock(_padlock)
+                lock (_padlock)
                 {
-                    if(null != _instance)
+                    if (null != _instance)
                     {
                         return _instance;
                     }

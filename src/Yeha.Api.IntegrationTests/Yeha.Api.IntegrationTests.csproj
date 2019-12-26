@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Yeha\Yeha.csproj" />
+    <ProjectReference Include="..\Yeha.Api\Yeha.Api.csproj" />
   </ItemGroup>
 
 </Project>

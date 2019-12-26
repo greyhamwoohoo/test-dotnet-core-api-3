@@ -1,7 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Yeha.AcceptanceTests.Infrastructure;
+using Yeha.Api.AcceptanceTests.Infrastructure;
 
-namespace Yeha.AcceptanceTests
+namespace Yeha.Api.AcceptanceTests
 {
     [TestClass]
     public class SmokeTests : AcceptanceTestBase

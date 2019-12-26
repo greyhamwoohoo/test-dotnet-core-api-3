@@ -1,10 +1,7 @@
-﻿using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading.Tasks;
-using Yeha.Models;
 
-namespace Yeha.IntegrationTests
+namespace Yeha.Api.IntegrationTests
 {
     [TestClass]
     public class SmokeTests : IntegrationTestBase

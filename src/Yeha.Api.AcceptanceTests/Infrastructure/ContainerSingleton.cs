@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
 
-namespace Yeha.AcceptanceTests.Infrastructure
+namespace Yeha.Api.AcceptanceTests.Infrastructure
 {
     /// <summary>
     /// </summary>
@@ -29,7 +29,7 @@ namespace Yeha.AcceptanceTests.Infrastructure
         {
             var testExecutionContextRelativePath = Path.Combine("TestExecutionContexts", $"{testExecutionContextFilename}");
             var testExecutionContextFullPath = Path.Combine(Directory.GetCurrentDirectory(), testExecutionContextRelativePath);
-            if (!System.IO.File.Exists(testExecutionContextFullPath))
+            if (!File.Exists(testExecutionContextFullPath))
             {
                 Assert.Fail($"The TestExecutionContext file does not exist at '{testExecutionContextFullPath}");
             }

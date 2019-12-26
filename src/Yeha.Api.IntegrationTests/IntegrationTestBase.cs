@@ -4,8 +4,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Yeha.Api;
 
-namespace Yeha.IntegrationTests
+namespace Yeha.Api.IntegrationTests
 {
     /// <summary>
     /// Integration Tests
@@ -20,11 +21,12 @@ namespace Yeha.IntegrationTests
         [TestInitialize]
         public async Task Setup()
         {
-            var hostBuilder = new HostBuilder()
+            var hostBuilder = Program
+                .CreateHostBuilder()
                 .ConfigureWebHost(webHost =>
                 {
                     webHost.UseTestServer();
-                    webHost.UseStartup<Yeha.Startup>();
+                    webHost.UseStartup<Startup>();
                 });
 
             Host = await hostBuilder.StartAsync();
@@ -33,7 +35,7 @@ namespace Yeha.IntegrationTests
         [TestCleanup]
         public async Task Teardown()
         {
-            if(Host != null)
+            if (Host != null)
             {
                 await Host.StopAsync();
                 Host.Dispose();

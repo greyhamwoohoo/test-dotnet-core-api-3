@@ -1,11 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using Yeha.AcceptanceTests.Infrastructure;
+using Yeha.Api;
+using Yeha.Api.AcceptanceTests.Infrastructure;
 
-namespace Yeha.AcceptanceTests
+namespace Yeha.Api.AcceptanceTests
 {
     [TestClass]
     public class InitializeAcceptanceTestRun
@@ -24,8 +22,8 @@ namespace Yeha.AcceptanceTests
             // 2. DEFAULT_TEST_EXECUTION_CONTEXT
             // 3. .runsettings is the fallback
 
-            var testExecutionContext = $"{Environment.GetEnvironmentVariable($"{Yeha.ConfigurationSingleton.ENVIRONMENT_VARIABLE_PREFIX}_TEST_EXECUTION_CONTEXT") ?? DEFAULT_TEST_EXECUTION_CONTEXT}";
-            if(testContext.Properties.Contains(TEST_EXECUTION_CONTEXT_KEY_NAME))
+            var testExecutionContext = $"{Environment.GetEnvironmentVariable($"{ConfigurationSingleton.ENVIRONMENT_VARIABLE_PREFIX}_TEST_EXECUTION_CONTEXT") ?? DEFAULT_TEST_EXECUTION_CONTEXT}";
+            if (testContext.Properties.Contains(TEST_EXECUTION_CONTEXT_KEY_NAME))
             {
                 testExecutionContext = Convert.ToString(testContext.Properties[TEST_EXECUTION_CONTEXT_KEY_NAME]);
             }

@@ -6,7 +6,7 @@ using static Newtonsoft.Json.Linq.JTokenType;
 using System.Threading.Tasks;
 using System.Linq;
 
-namespace Yeha.IntegrationTests
+namespace Yeha.Api.IntegrationTests
 {
     /// <summary>
     /// Rationale: Lock in the shape ('contract') of your response: strings, integers, booleans and so forth. 
@@ -36,15 +36,15 @@ namespace Yeha.IntegrationTests
         [TestMethod]
         public void AString()
         {
-            AssertThat(thePropertyCalled: "thisIsAString", inPayload: _content, isOfType: JTokenType.String);
-            AssertThat(thePropertyCalled: "thisIsAString", inPayload: _content, isOneOfTheseTypes: new[] { JTokenType.String, JTokenType.Null });
+            AssertThat(thePropertyCalled: "thisIsAString", inPayload: _content, isOfType: String);
+            AssertThat(thePropertyCalled: "thisIsAString", inPayload: _content, isOneOfTheseTypes: new[] { String, Null });
         }
 
         [TestMethod]
         public void AStringWithNullValue()
         {
             AssertThat(thePropertyCalled: "thisIsAStringWithNullValue", inPayload: _content, isOfType: Null);
-            AssertThat(thePropertyCalled: "thisIsAStringWithNullValue", inPayload: _content, isOneOfTheseTypes: new[] { JTokenType.String, Null });
+            AssertThat(thePropertyCalled: "thisIsAStringWithNullValue", inPayload: _content, isOneOfTheseTypes: new[] { String, Null });
         }
 
         [TestMethod]
@@ -66,15 +66,15 @@ namespace Yeha.IntegrationTests
         [TestMethod]
         public void ABoolean()
         {
-            AssertThat(thePropertyCalled: "thisIsAFalseBoolean", inPayload: _content, isOfType: JTokenType.Boolean);
-            AssertThat(thePropertyCalled: "thisIsATrueBoolean", inPayload: _content, isOfType: JTokenType.Boolean);
+            AssertThat(thePropertyCalled: "thisIsAFalseBoolean", inPayload: _content, isOfType: Boolean);
+            AssertThat(thePropertyCalled: "thisIsATrueBoolean", inPayload: _content, isOfType: Boolean);
         }
 
         [TestMethod]
         public void AGuid()
         {
             // A C# Guid is serialized as a string. 
-            AssertThat(thePropertyCalled: "thisIsAGuid", inPayload: _content, isOfType: JTokenType.String);
+            AssertThat(thePropertyCalled: "thisIsAGuid", inPayload: _content, isOfType: String);
         }
 
         [TestMethod]
@@ -84,20 +84,20 @@ namespace Yeha.IntegrationTests
             // If deserializing into a C# POCO with a TimeSpan Property, Newtonsoft can work out that it is a TimeSpan and deserialize accordingly. 
             // If deserializing into a JObject, Newtonsoft does not have all of the context it needs to know its a TimeSpan - so treats it as an Object
             // See https://stackoverflow.com/questions/13484540/how-to-parse-a-timespan-value-in-newtonsoft-json for more information
-            AssertThat(thePropertyCalled: "thisIsATimeSpan", inPayload: _content, isOfType: JTokenType.Object);
+            AssertThat(thePropertyCalled: "thisIsATimeSpan", inPayload: _content, isOfType: Object);
         }
 
         [TestMethod]
         public void ADateTime()
         {
-            AssertThat(thePropertyCalled: "thisIsADateTime", inPayload: _content, isOfType: JTokenType.Date);
+            AssertThat(thePropertyCalled: "thisIsADateTime", inPayload: _content, isOfType: Date);
         }
 
         [TestMethod]
         public void AUri()
         {
             // C# Uri objects are always serialized as a String
-            AssertThat(thePropertyCalled: "thisIsAUri", inPayload: _content, isOfType: JTokenType.String);
+            AssertThat(thePropertyCalled: "thisIsAUri", inPayload: _content, isOfType: String);
         }
 
         [TestMethod]
@@ -115,21 +115,21 @@ namespace Yeha.IntegrationTests
         [TestMethod]
         public void WantAnObject()
         {
-            AssertThat(thePropertyCalled: "thisIsANestedObject", inPayload: _content, isOfType: JTokenType.Object);
+            AssertThat(thePropertyCalled: "thisIsANestedObject", inPayload: _content, isOfType: Object);
         }
 
         [TestMethod]
         public void ANestedPropertyInObject()
         {
             var nestedObject = _content.SelectToken("$.thisIsANestedObject");
-            AssertThat(thePropertyCalled: "nestedString", inPayload: nestedObject, isOfType: JTokenType.String);
+            AssertThat(thePropertyCalled: "nestedString", inPayload: nestedObject, isOfType: String);
         }
 
         [TestMethod]
         public void SerializedBytes()
         {
             // NOTE: A byte array will be deserialized as a string (without a model)
-            AssertThat(thePropertyCalled: "theseAreBytes", inPayload: _content, isOfType: JTokenType.String);
+            AssertThat(thePropertyCalled: "theseAreBytes", inPayload: _content, isOfType: String);
         }
 
         [TestMethod]

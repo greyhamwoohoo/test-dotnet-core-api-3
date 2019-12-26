@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
-using Yeha.Models;
+using Yeha.Api.Models;
 
-namespace Yeha.Controllers
+namespace Yeha.Api.Controllers
 {
     [ApiController]
     [Route("api/primitives")]
@@ -31,13 +31,13 @@ namespace Yeha.Controllers
                 ThisIsADouble = double.MaxValue,
                 ThisIsAFalseBoolean = false,
                 ThisIsATrueBoolean = true,
-                ThisIsAGuid = System.Guid.NewGuid(),
+                ThisIsAGuid = Guid.NewGuid(),
                 ThisIsATimeSpan = TimeSpan.FromSeconds(1234),
                 ThisIsADateTime = DateTime.Now,
                 ThisIsAUri = new Uri("https://www.google.com.au"),
                 ThisIsAnEmptyIntArray = new int[0],
                 ThisIsAnIntArrayWithOneElement = new int[1] { 123 },
-                ThisIsANestedObject = new NestedPrimitives() {  NestedString = "thisIsANestedString" },
+                ThisIsANestedObject = new NestedPrimitives() { NestedString = "thisIsANestedString" },
                 TheseAreBytes = new byte[] { 1, 2, 3 }
             };
         }
