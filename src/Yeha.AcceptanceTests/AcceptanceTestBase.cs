@@ -20,19 +20,24 @@ namespace Yeha.AcceptanceTests
         private IHost _host;
         private IServiceProvider ServiceProvider => TestContext.Properties["ServiceProvider"] as IServiceProvider ?? throw new System.InvalidOperationException($"The container must be initialized and stored in the TestContext");
 
+        private string _logPath;
+
         [TestInitialize]
         public async Task SetupAcceptanceTestBase()
         {
             var testSettings = Resolve<TestSettings>();
 
-            foreach(var key in testSettings.EnvironmentVariables.Keys)
+            _logPath = System.IO.Path.Combine(System.Environment.ExpandEnvironmentVariables("%TEMP%"), "Logs", $"AcceptanceTests-{DateTime.Now.ToString("yyyyMMddTHHmmssfff")}.log");
+
+            foreach (var key in testSettings.EnvironmentVariables.Keys)
             {
                 System.Environment.SetEnvironmentVariable(key, testSettings.EnvironmentVariables[key], EnvironmentVariableTarget.Process);
             }
 
             System.Environment.SetEnvironmentVariable("ASPNETCORE_URLS", testSettings.BaseUrl);
+            System.Environment.SetEnvironmentVariable("TEST_LOG_PATH", _logPath);
 
-            if(testSettings.InProcess)
+            if (testSettings.InProcess)
             {
                 _host = Yeha.Program
                     .CreateHostBuilder()
@@ -55,6 +60,8 @@ namespace Yeha.AcceptanceTests
                 _host.Dispose();
                 _host = null;
             }
+
+            TestContext.AddResultFile(_logPath);
         }
 
         protected T Resolve<T>()

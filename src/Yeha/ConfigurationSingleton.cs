@@ -38,8 +38,9 @@ namespace Yeha
         {
             var result = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false)
                 .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Local"}.json", optional: true)
+                .AddJsonFile("serilogSettings.json", optional: false, reloadOnChange: false)
                 .AddEnvironmentVariables(ENVIRONMENT_VARIABLE_PREFIX)
                 .Build();
 

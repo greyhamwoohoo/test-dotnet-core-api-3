@@ -37,7 +37,12 @@ The 'InProcess' setting will cause the API to be 'self-hosted': this allows us t
 
 
 ## Logging
+Logging is included using SeriLog. Each test will capture the log for that individual test. 
 
-
+| Reference | Link |
+| --------- | ---- |
+| Serilog in .Net Core 3.0 | https://nblumhardt.com/2019/10/serilog-in-aspnetcore-3/ |
+| Serilog Configuration Inline | https://github.com/serilog/serilog-aspnetcore |
+| Serilog Json Configuration | https://github.com/serilog/serilog-settings-configuration |
 
 ## References
