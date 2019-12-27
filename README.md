@@ -1,5 +1,13 @@
 # test-dotnet-core-api-3
-.Net Core 3.1 REST API; sample stuff I often end up using for testing. 
+.Net Core 3.1 REST API; bare-bones Test Framework implementation samples of what I end up doing for testing .Net Core Microservices. I get tired of implementing this again and again... 
+
+Work In Progress!
+TO COME: Build Pipelines, Component Testing, Container Testing
+TO COME: Reporting
+.. 
+
+## Example
+The API service consists of a few controllers and an IProduct/IProductRepository hackey implementation to show a few use cases. 
 
 ## Integration Tests
 Integration Tests use the Microsoft 'TestServer' implementation (in memory) and HttpClient.
@@ -36,6 +44,11 @@ The 'InProcess' setting will cause the API to be 'self-hosted': this allows us t
 | Reference | Link |
 | --------- | ---- |
 | Configure unit/integration/acceptance tests with a .runsettings file | https://docs.microsoft.com/en-us/visualstudio/test/configure-unit-tests-by-using-a-dot-runsettings-file?view=vs-2019 |
+
+## Unit Tests (Security)
+Shows how to use Unit Tests to ensure that all Controllers have an [Authorize] attribute or that no HTTP methods have an [AllowAnonymous] attribute - unless they are explicitly excluded.
+
+A quick and dirty way of stopping accidental checkins where developers have removed Authorization concerns to aid local development. 
 
 ## Builders / TestSdk
 A 'Test SDK' is included with some bootstrapped builders. Builders are a fluent way of constructing payloads ('convention over configuration'). 
