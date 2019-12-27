@@ -3,11 +3,7 @@
     "Using": [ "Serilog.Sinks.Console" ],
     "MinimumLevel": "Debug",
     "WriteTo": [
-      { "Name": "Console" },
-      {
-        "Name": "File",
-        "Args": { "path": "%TEST_LOG_PATH%" }
-      }
+      { "Name": "Console" }
     ],
     "Enrich": [ "FromLogContext", "WithMachineName", "WithThreadId" ],
     "Properties": {

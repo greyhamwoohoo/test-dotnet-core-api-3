@@ -3,8 +3,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Threading.Tasks;
-using Yeha.Api;
 using Yeha.Api.AcceptanceTests.Infrastructure;
+using Yeha.Api.TestSdk.Contracts;
+using Yeha.Api.TestSdk.Infrastructure;
 
 namespace Yeha.Api.AcceptanceTests
 {
@@ -18,25 +19,26 @@ namespace Yeha.Api.AcceptanceTests
 
         protected IHost Host => _host ?? throw new InvalidOperationException($"You must initialize the host before accessing it. ");
 
-        private IHost _host;
-        private IServiceProvider ServiceProvider => TestContext.Properties["ServiceProvider"] as IServiceProvider ?? throw new InvalidOperationException($"The container must be initialized and stored in the TestContext");
+        protected IClient Client => Resolve<IClient>();
 
-        private string _logPath;
+        private IHost _host;
+
+        private IServiceScope _scope;
 
         [TestInitialize]
         public async Task SetupAcceptanceTestBase()
         {
-            var testSettings = Resolve<TestSettings>();
+            // Create a new Lifetime Scope for the test: anything in the container with .AddScoped() will be resolved exactly once within each Scope
+            _scope = ContainerSingleton.Instance().CreateScope();
 
-            _logPath = System.IO.Path.Combine(Environment.ExpandEnvironmentVariables("%TEMP%"), "Logs", $"AcceptanceTests-{DateTime.Now.ToString("yyyyMMddTHHmmssfff")}.log");
+            var testSettings = Resolve<TestSettings>();
 
             foreach (var key in testSettings.EnvironmentVariables.Keys)
             {
                 Environment.SetEnvironmentVariable(key, testSettings.EnvironmentVariables[key], EnvironmentVariableTarget.Process);
             }
 
-            Environment.SetEnvironmentVariable("ASPNETCORE_URLS", testSettings.BaseUrl);
-            Environment.SetEnvironmentVariable("TEST_LOG_PATH", _logPath);
+            Environment.SetEnvironmentVariable("ASPNETCORE_URLS", testSettings.BaseUrl, EnvironmentVariableTarget.Process);
 
             if (testSettings.InProcess)
             {
@@ -55,19 +57,24 @@ namespace Yeha.Api.AcceptanceTests
         [TestCleanup]
         public async Task CleanupAcceptanceTestBase()
         {
-            if (_host != null)
+            try
             {
-                await _host.StopAsync();
-                _host.Dispose();
-                _host = null;
+                if (_host != null)
+                {
+                    await _host.StopAsync();
+                    _host.Dispose();
+                    _host = null;
+                }
             }
-
-            TestContext.AddResultFile(_logPath);
+            finally
+            {
+                _scope.Dispose();
+            }
         }
 
         protected T Resolve<T>()
         {
-            return (T)ServiceProvider.GetRequiredService(typeof(T));
+            return (T)_scope.ServiceProvider.GetRequiredService(typeof(T));
         }
     }
 }

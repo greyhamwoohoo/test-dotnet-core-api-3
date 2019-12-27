@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using Yeha.Api;
 using Yeha.Api.AcceptanceTests.Infrastructure;
 
 namespace Yeha.Api.AcceptanceTests
@@ -30,7 +29,7 @@ namespace Yeha.Api.AcceptanceTests
 
             var candidateTestExecutionContextFilename = $"testsettings.{testExecutionContext}.json";
 
-            _instance = ContainerSingleton.BuildContainer(candidateTestExecutionContextFilename);
+            _instance = ContainerSingleton.InitializeContainer(candidateTestExecutionContextFilename);
 
             testContext.Properties.Add("ServiceProvider", _instance);
         }

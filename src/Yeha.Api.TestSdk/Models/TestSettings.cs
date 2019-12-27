@@ -1,4 +1,4 @@
-﻿namespace Yeha.Api.AcceptanceTests.Infrastructure
+﻿namespace Yeha.Api.TestSdk.Infrastructure
 {
     public class TestSettings
     {
