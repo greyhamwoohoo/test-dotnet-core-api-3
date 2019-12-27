@@ -4,6 +4,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Threading.Tasks;
 using Yeha.Api.AcceptanceTests.Infrastructure;
+using Yeha.Api.AcceptanceTests.Mocks;
+using Yeha.Api.Contracts;
 using Yeha.Api.TestSdk.Contracts;
 using Yeha.Api.TestSdk.Infrastructure;
 
@@ -32,6 +34,11 @@ namespace Yeha.Api.AcceptanceTests
             _scope = ContainerSingleton.Instance().CreateScope();
 
             var testSettings = Resolve<TestSettings>();
+            
+            if(IsInProcessOnly && !testSettings.InProcess)
+            {
+                Assert.Inconclusive($"The test called {TestContext.FullyQualifiedTestClassName} can only be run InProcess; the current TestExecutionContext is not InProcess. Therefore, the test is being skipped. To avoid this message, consider using a TestCategory on the test and explicitly ignoring it in the Test Filter. ");
+            } 
 
             foreach (var key in testSettings.EnvironmentVariables.Keys)
             {
@@ -44,9 +51,9 @@ namespace Yeha.Api.AcceptanceTests
             {
                 _host = Program
                     .CreateHostBuilder()
-                    .ConfigureWebHostDefaults(webBuilder =>
+                    .ConfigureServices(services =>
                     {
-
+                        ConfigureServices(services);
                     })
                     .Build();
 
@@ -76,5 +83,11 @@ namespace Yeha.Api.AcceptanceTests
         {
             return (T)_scope.ServiceProvider.GetRequiredService(typeof(T));
         }
+
+        protected virtual void ConfigureServices(IServiceCollection services)
+        {
+        }
+
+        protected virtual bool IsInProcessOnly => false;
     }
 }
