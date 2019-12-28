@@ -6,7 +6,7 @@ using Yeha.Api.Models;
 namespace Yeha.Api.Controllers
 {
     [ApiController]
-    [Route("api/ping")]
+    [Route("api/ping2")]
     [Authorize]
     public class PingAllowAnonymousController : ControllerBase
     {
