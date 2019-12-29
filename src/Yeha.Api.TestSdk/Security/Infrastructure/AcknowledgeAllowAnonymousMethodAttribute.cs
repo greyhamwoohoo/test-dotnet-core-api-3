@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Yeha.UnitTests.Security.Infrastructure
+namespace Yeha.Api.TestSdk.Security.Infrastructure
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     public class AcknowledgeAllowAnonymousMethodAttribute : Attribute
@@ -11,6 +11,6 @@ namespace Yeha.UnitTests.Security.Infrastructure
 
         public Type Controller { get; set; }
         public string MethodName { get; set; }
-        public string FullyQualifiedName => $"{Controller?.FullName}.{MethodName}";
+        public string FullyQualifiedName => $"{Controller?.FullName ?? "ControllerPropertyNotset"}.{MethodName}";
     }
 }

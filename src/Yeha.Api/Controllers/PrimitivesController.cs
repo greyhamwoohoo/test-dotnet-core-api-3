@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using Yeha.Api.Models;
@@ -7,6 +8,7 @@ namespace Yeha.Api.Controllers
 {
     [ApiController]
     [Route("api/primitives")]
+    [AllowAnonymous]
     public class PrimitivesController : ControllerBase
     {
         private readonly ILogger<PrimitivesController> _logger;

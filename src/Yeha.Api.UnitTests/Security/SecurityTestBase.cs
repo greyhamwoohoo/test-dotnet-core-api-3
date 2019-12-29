@@ -7,7 +7,7 @@ using System.Linq;
 using System.Reflection;
 using Yeha.Api.Controllers;
 
-namespace Yeha.UnitTests.Security
+namespace Yeha.Api.UnitTests.Security
 {
     [TestClass]
     public class SecurityTestBase

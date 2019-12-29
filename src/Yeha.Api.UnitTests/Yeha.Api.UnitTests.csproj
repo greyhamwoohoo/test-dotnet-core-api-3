@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Yeha.Api.TestSdk\Yeha.Api.TestSdk.csproj" />
     <ProjectReference Include="..\Yeha.Api\Yeha.Api.csproj" />
   </ItemGroup>
 

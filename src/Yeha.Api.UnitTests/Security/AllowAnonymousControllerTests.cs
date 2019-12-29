@@ -5,15 +5,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Yeha.Api.Controllers;
-using Yeha.UnitTests.Security.Infrastructure;
+using Yeha.Api.TestSdk.Security.Infrastructure;
 
-namespace Yeha.UnitTests.Security
+namespace Yeha.Api.UnitTests.Security
 {
     /// <summary>
     /// These tests ensure that every controller that has a [AllowAnonymous] attribute is declared here to help prevent insecure controllers getting onto the code base. Security is often tinkered with during local development... and accidents happen. 
     /// </summary>
     [TestClass]
     [AcknowledgeAllowAnonymousController(Controller = typeof(AllowAnonymousPingController))]
+    [AcknowledgeAllowAnonymousController(Controller = typeof(PrimitivesController))]
+    [AcknowledgeAllowAnonymousController(Controller = typeof(ProductsController))]
     public class AllowAnonymousControllerTests : SecurityTestBase
     {
         [TestMethod]

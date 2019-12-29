@@ -6,11 +6,11 @@ using Yeha.Api.Models;
 namespace Yeha.Api.Controllers
 {
     [ApiController]
-    [Route("api/ping2")]
+    [Route("api/pingAuthorizedWithAnonymousMethods")]
     [Authorize]
-    public class PingAllowAnonymousController : ControllerBase
+    public class PingWithAllowAnonymousMethodsController : ControllerBase
     {
-        public PingAllowAnonymousController()
+        public PingWithAllowAnonymousMethodsController()
         {
         }
 
@@ -18,7 +18,7 @@ namespace Yeha.Api.Controllers
         [AllowAnonymous]
         public ActionResult<IEnumerable<Product>> Get()
         {
-            return Ok("pong");
+            return Ok("pongFromPingAuthorizedWithAnonymousMethods");
         }
 
         [HttpDelete]
@@ -33,6 +33,5 @@ namespace Yeha.Api.Controllers
         {
             return Ok("pong");
         }
-
     }
 }

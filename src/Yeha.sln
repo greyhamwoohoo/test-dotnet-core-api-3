@@ -16,7 +16,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yeha.Api.AcceptanceTests", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yeha.Api.TestSdk", "Yeha.Api.TestSdk\Yeha.Api.TestSdk.csproj", "{3C6C850B-FC54-40C1-A0EF-BCAF24DFE838}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yeha.UnitTests", "Yeha.UnitTests\Yeha.UnitTests.csproj", "{CD032EDE-8055-4FBD-9B38-654F9E1F8FBD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yeha.Api.UnitTests", "Yeha.Api.UnitTests\Yeha.Api.UnitTests.csproj", "{CD032EDE-8055-4FBD-9B38-654F9E1F8FBD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

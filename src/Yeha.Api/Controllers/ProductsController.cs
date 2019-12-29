@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using Yeha.Api.Contracts;
@@ -8,6 +9,7 @@ namespace Yeha.Api.Controllers
 {
     [ApiController]
     [Route("api/products")]
+    [AllowAnonymous]
     public class ProductsController : ControllerBase
     {
         private readonly ILogger<ProductsController> _logger;

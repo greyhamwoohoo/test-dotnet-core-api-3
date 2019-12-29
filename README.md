@@ -1,13 +1,14 @@
 # test-dotnet-core-api-3
-.Net Core 3.1 REST API; bare-bones Test Framework implementation samples of what I end up doing for testing .Net Core Microservices. I get tired of implementing this again and again... 
+Bare-bones .Net Core 3.1 API with boot strapped minimalistic test projects... a reference, because I get tired of implementing this again and again :-)
 
-Work In Progress!
+## Work In Progress!
 TO COME: Build Pipelines, Component Testing, Container Testing
 TO COME: Reporting
+TO COME: Docker (the current implementation is the one included with the standard .Net Core Template...o)
 .. 
 
 ## Example
-The API service consists of a few controllers and an IProduct/IProductRepository hackey implementation to show a few use cases. 
+The API service consists of a few controllers (authorized, anonymous, implicit) and an IProduct/IProductRepository implementation that can be overridden in the mock. 
 
 ## Integration Tests
 Integration Tests use the Microsoft 'TestServer' implementation (in memory) and HttpClient.
@@ -26,9 +27,10 @@ Works well enough if you know your consumers and are building to their use cases
 | Reference | Link |
 | --------- | ---- |
 | Consumer Contract Driven Testing: for a larger scale contract testing strategy | https://pact.io |
+| A decent sized sample implementation | https://github.com/andreschaffer/microservices-testing-examples |
 
 ## Acceptance Tests
-Self-hosts the service using a 'hard' port binding (does not use TestServer in its startup)
+Self-hosts the service using a 'hard' port binding (does not use TestServer in its startup). Essentially: an in-memory Component Test. 
 
 Shows Serilog registration and integration; scoped lifetimes; builders. 
 
@@ -45,10 +47,17 @@ The 'InProcess' setting will cause the API to be 'self-hosted': this allows us t
 | --------- | ---- |
 | Configure unit/integration/acceptance tests with a .runsettings file | https://docs.microsoft.com/en-us/visualstudio/test/configure-unit-tests-by-using-a-dot-runsettings-file?view=vs-2019 |
 
-## Unit Tests (Security)
-Shows how to use Unit Tests to ensure that all Controllers have an [Authorize] attribute or that no HTTP methods have an [AllowAnonymous] attribute - unless they are explicitly excluded.
+## Security Tests
+Rationale: Security is always on unless controllers or methods are explicitly opted out. To prevent accidental security blunders, controllers and methods that are not authorized or anonymous must be explicitly acknowledged in the unit tests. 
 
-A quick and dirty way of stopping accidental checkins where developers have removed Authorization concerns to aid local development. 
+Unit Tests show how to ensure that all Controllers have an [Authorize] attribute or that no HTTP methods have an [AllowAnonymous] attribute - unless they are explicitly acknowledged (excluded) in the test. A quick and dirty way of stopping accidental checkins where developers have removed Authorization attributes to aid local development. 
+
+The Acceptance Tests show (via MiddlewareSecurityTests) how to ensure that the Middleware Authentication/Authorization is enabled by default. This test in particular is very specific to how you configure your authentication/authorization. 
+
+| Reference | Link |
+| --------- | ---- |
+| Set up any Authentication to get the tests working | https://docs.microsoft.com/en-us/aspnet/core/security/authentication/windowsauth?view=aspnetcore-3.1&tabs=visual-studio |
+| Authorization Workshop | https://github.com/blowdart/AspNetAuthorizationWorkshop |
 
 ## Builders / TestSdk
 A 'Test SDK' is included with some bootstrapped builders. Builders are a fluent way of constructing payloads ('convention over configuration'). 

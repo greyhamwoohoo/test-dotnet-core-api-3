@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Yeha.UnitTests.Security.Infrastructure
+namespace Yeha.Api.TestSdk.Security.Infrastructure
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     public class AcknowledgeAllowAnonymousControllerAttribute : Attribute

@@ -5,16 +5,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Yeha.UnitTests.Security.Infrastructure;
+using Yeha.Api.TestSdk.Security.Infrastructure;
 
-namespace Yeha.UnitTests.Security
+namespace Yeha.Api.UnitTests.Security
 {
     /// <summary>
     /// These tests ensure that every [AllowAnonymous] method is declared here to help prevent insecure methods getting onto the code base. Security is often tinkered with during local development... and accidents happen. 
     /// </summary>
     [TestClass]
-    [AcknowledgeAllowAnonymousMethod(Controller = typeof(Api.Controllers.PingAllowAnonymousController), MethodName = "Get")]
-    [AcknowledgeAllowAnonymousMethod(Controller = typeof(Api.Controllers.PingAllowAnonymousController), MethodName = "Delete")]
+    [AcknowledgeAllowAnonymousMethod(Controller = typeof(Controllers.PingWithAllowAnonymousMethodsController), MethodName = "Get")]
+    [AcknowledgeAllowAnonymousMethod(Controller = typeof(Controllers.PingWithAllowAnonymousMethodsController), MethodName = "Delete")]
     public class AllowAnonymousMethodTests : SecurityTestBase
     {
         [TestMethod]
@@ -24,7 +24,7 @@ namespace Yeha.UnitTests.Security
             // Arrange
             var knownAllowAnonymousMethod = FindAllMethods(Controllers)
                 .Where(m => IsAllowAnonymousMethod(m))
-                .Where(m => m.DeclaringType.FullName == "Yeha.Api.Controllers.PingAllowAnonymousController")
+                .Where(m => m.DeclaringType.FullName == typeof(Controllers.PingWithAllowAnonymousMethodsController).FullName)
                 .Where(m => m.Name == "Get");
 
             // Assert

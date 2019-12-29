@@ -5,6 +5,10 @@ using Yeha.Api.Models;
 
 namespace Yeha.Api.Services
 {
+    /// <summary>
+    /// Minimal implementation of an in-memory repository
+    /// Implementing is overridden by the Acceptance Tests by injecting a mock of IProductRepository at service start time. 
+    /// </summary>
     public class ProductRepository : IProductRepository
     {
         private readonly List<IProduct> _products = new List<IProduct>();

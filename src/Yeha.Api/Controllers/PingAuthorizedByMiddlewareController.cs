@@ -6,11 +6,10 @@ using Yeha.Api.Models;
 namespace Yeha.Api.Controllers
 {
     [ApiController]
-    [Route("api/pingAuthorized")]
-    [Authorize]
-    public class PingController : ControllerBase
+    [Route("api/pingAuthorizedByMiddleware")]
+    public class PingAuthorizedByMiddlewareController : ControllerBase
     {
-        public PingController()
+        public PingAuthorizedByMiddlewareController()
         {
         }
 

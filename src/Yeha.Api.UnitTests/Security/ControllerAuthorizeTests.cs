@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Yeha.Api.Controllers;
-using Yeha.UnitTests.Security.Infrastructure;
+using Yeha.Api.TestSdk.Security.Infrastructure;
 
-namespace Yeha.UnitTests.Security
+namespace Yeha.Api.UnitTests.Security
 {
     /// <summary>
     /// These tests ensure that every controller has a [Authorize] attribute or is declared here to help prevent insecure controllers getting onto the code base. Security is often tinkered with during local development... and accidents happen. 
@@ -16,6 +16,7 @@ namespace Yeha.UnitTests.Security
     [AcknowledgeNotAuthorizedController(Controller = typeof(ProductsController))]
     [AcknowledgeNotAuthorizedController(Controller = typeof(PrimitivesController))]
     [AcknowledgeNotAuthorizedController(Controller = typeof(AllowAnonymousPingController))]
+    [AcknowledgeNotAuthorizedController(Controller = typeof(PingAuthorizedByMiddlewareController))]
     public class ControllerAuthorizeTests : SecurityTestBase
     {
         [TestMethod]
