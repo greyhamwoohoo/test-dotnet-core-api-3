@@ -1,11 +1,15 @@
 trigger: none
 pr: none
-
+    
 #
 # NOTE: This uses the Visual Studio Test Runner and therefore needs to run on Windows 2019 Image
 #
 
 name: 1.0$(Rev:.r)
+
+variables:
+  - name: Build.Configuration
+    value: Release
 
 stages:
 - stage: Build
@@ -29,4 +33,4 @@ stages:
         command: restore
         projects: '**/*.sln'
     - template: templates/run-tests-from-projects.yml
-    - template: templates/run-tests-from-dlls.yml
+    - template: templates/run-tests-from-dlls-vstest.yml

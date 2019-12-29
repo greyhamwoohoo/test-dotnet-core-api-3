@@ -1,0 +1,42 @@
+trigger: none
+pr: none
+
+name: 1.0$(Rev:.r)
+
+variables:
+  - name: Build.Configuration
+    value: Release
+    
+stages:
+- stage: Build
+  jobs:
+  - job: Build
+    pool:
+      vmImage: ubuntu-18.04
+
+    steps:
+    - task: UseDotNet@2
+      displayName: 'Use .Net Core sdk 3.1.x'
+      inputs:
+        version: 3.1.x
+    - task: DotNetCoreCLI@2
+      displayName: 'Dotnet Restore'
+      inputs:
+        command: restore
+        projects: '**/*.sln'
+    - task: DotNetCoreCLI@2
+      displayName: 'Dotnet Publish'
+      inputs:
+        command: publish
+        publishWebProjects: false
+        projects: |
+           **/*.sln
+        
+        arguments: '--no-restore --configuration $(Build.Configuration)'
+        zipAfterPublish: false  
+
+    - template: templates/run-tests-from-projects.yml
+    - powershell: 'Get-ChildItem -Recurse'
+      workingDirectory: src
+      displayName: 'PowerShell Script'
+    - template: templates/run-tests-from-dlls-dotnet-vstest.yml

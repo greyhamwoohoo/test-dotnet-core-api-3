@@ -7,7 +7,7 @@ steps:
   displayName: 'Dotnet Test: Run Unit Tests'
   inputs:
     command: test
-    arguments: "--no-restore"
+    arguments: "--no-restore --configuration $(Build.Configuration)"
     projects: |
       **/*UnitTests.csproj
     
@@ -16,7 +16,7 @@ steps:
 - task: DotNetCoreCLI@2
   displayName: 'Dotnet Test: Run Integration Tests'
   inputs:
-    arguments: "--no-restore"
+    arguments: "--no-restore --configuration $(Build.Configuration)"
     command: test
     projects: |
       **/*IntegrationTests.csproj
@@ -26,7 +26,7 @@ steps:
 - task: DotNetCoreCLI@2
   displayName: 'Dotnet Test: Run Acceptance Tests'
   inputs:
-    arguments: "--no-restore"
+    arguments: "--no-restore --configuration $(Build.Configuration)"
     command: test
     projects: |
       **/*AcceptanceTests.csproj

@@ -2,13 +2,19 @@
 Bare-bones .Net Core 3.1 API with boot strapped minimalistic test projects... a reference, because I get tired of implementing this again and again :-)
 
 ## Work In Progress!
-TO COME: Build Pipelines, Component Testing, Container Testing
-TO COME: Reporting
-TO COME: Docker (the current implementation is the one included with the standard .Net Core Template...o)
-.. 
+TO COME: Reporting, Docker Container Testing in Build Pipeline
 
 ## Example
 The API service consists of a few controllers (authorized, anonymous, implicit) and an IProduct/IProductRepository implementation that can be overridden in the mock. 
+
+## Build Pipelines
+There are three YAML Builds included under the azure-devops folder:
+
+| Build | Information |
+| ----- | ----------- |
+| pr.yml | Used for PR Builds. Runs the Unit, Integration and Acceptance Tests from the .csproj files using 'dotnet test' |
+| release-vstest.yml | Used for Release Builds. Same as 'pr.yml' but also runs the tests from DLLs using the Visual Studio Test Runner (on Windows) |
+| release-dotnet-vstest.yml | Used for Release Builds. Same as 'pr.yml' but also runs the tests from DLLs using dotnet vstest (on Linux) |
 
 ## Integration Tests
 Integration Tests use the Microsoft 'TestServer' implementation (in memory) and HttpClient.
