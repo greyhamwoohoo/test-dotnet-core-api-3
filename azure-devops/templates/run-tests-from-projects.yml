@@ -7,6 +7,7 @@ steps:
   displayName: 'Run Unit Tests'
   inputs:
     command: test
+    arguments: "--no-restore"
     projects: |
       **/*UnitTests.csproj
     
@@ -15,6 +16,7 @@ steps:
 - task: DotNetCoreCLI@2
   displayName: 'Run Integration Tests'
   inputs:
+    arguments: "--no-restore"
     command: test
     projects: |
       **/*IntegrationTests.csproj
@@ -24,6 +26,7 @@ steps:
 - task: DotNetCoreCLI@2
   displayName: 'Run Acceptance Tests'
   inputs:
+    arguments: "--no-restore"
     command: test
     projects: |
       **/*AcceptanceTests.csproj
