@@ -1,7 +1,7 @@
 trigger: none
 pr: none
 
-name: 1.0$(Rev:.r)
+name: 1.0$(Rev:.r)-$(SourceBranchName)
 
 stages:
 - stage: Build
@@ -15,27 +15,4 @@ stages:
       displayName: 'Use .Net Core sdk 3.1.x'
       inputs:
         version: 3.1.x
-    - task: DotNetCoreCLI@2
-      displayName: 'Run Unit Tests'
-      inputs:
-        command: test
-        projects: |
-          **/*UnitTests.csproj
-     
-        testRunTitle: 'Unit Tests'
-    - task: DotNetCoreCLI@2
-      displayName: 'Run Integration Tests'
-      inputs:
-        command: test
-        projects: |
-          **/*IntegrationTests.csproj
-     
-        testRunTitle: 'Integration Tests'
-    - task: DotNetCoreCLI@2
-      displayName: 'Run Acceptance Tests'
-      inputs:
-        command: test
-        projects: |
-          **/*AcceptanceTests.csproj
-     
-        testRunTitle: 'Acceptance Tests'
+    - template: templates/run-tests-from-projects.yml
