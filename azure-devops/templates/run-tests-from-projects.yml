@@ -4,31 +4,31 @@
 
 steps:
 - task: DotNetCoreCLI@2
-  displayName: 'Run Unit Tests'
+  displayName: 'Dotnet Test: Run Unit Tests'
   inputs:
     command: test
     arguments: "--no-restore"
     projects: |
       **/*UnitTests.csproj
     
-    testRunTitle: 'Unit Tests'
+    testRunTitle: 'Dotnet Test: Unit Tests'
 
 - task: DotNetCoreCLI@2
-  displayName: 'Run Integration Tests'
+  displayName: 'Dotnet Test: Run Integration Tests'
   inputs:
     arguments: "--no-restore"
     command: test
     projects: |
       **/*IntegrationTests.csproj
     
-    testRunTitle: 'Integration Tests'
+    testRunTitle: 'Dotnet Test: Integration Tests'
 
 - task: DotNetCoreCLI@2
-  displayName: 'Run Acceptance Tests'
+  displayName: 'Dotnet Test: Run Acceptance Tests'
   inputs:
     arguments: "--no-restore"
     command: test
     projects: |
       **/*AcceptanceTests.csproj
     
-    testRunTitle: 'Acceptance Tests'
+    testRunTitle: 'Dotnet Test: Acceptance Tests'
