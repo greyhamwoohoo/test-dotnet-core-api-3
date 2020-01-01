@@ -11,13 +11,11 @@ YAML Pipeline will build a container, start it and run Acceptance Tests against 
 ## Build Pipelines
 There are three YAML Builds included under the azure-devops folder:
 
-| Build | Information |
-| ----- | ----------- |
-| pr.yml | Used for PR Builds. Runs the Unit, Integration and Acceptance Tests from the .csproj files using 'dotnet test' |
-| release-vstest.yml | Used for Release Builds. Same as 'pr.yml' but also runs the tests from DLLs using the Visual Studio Test Runner (on Windows) |
-| release-dotnet-vstest.yml | Used for Release Builds. Runs tests and publishes results from all projects and DLLs using dotnet test and vstest (on Linux); builds and runs tests *AGAINST* the Container |
-
-
+| Build | Status | Information |
+| ----- | ------ | ----------- |
+| pr.yml | N/A | Used for PR Builds. Runs the Unit, Integration and Acceptance Tests from the .csproj files using 'dotnet test' |
+| release-vstest.yml | [![Build Status](https://greyhamwoohoo.visualstudio.com/Public-Automation-Examples/_apis/build/status/Release-VsTest-Windows?branchName=master)](https://greyhamwoohoo.visualstudio.com/Public-Automation-Examples/_build/latest?definitionId=20&branchName=master) | Windows: Used for Release Builds. Same as 'pr.yml' but also runs the tests from DLLs using the Visual Studio Test Runner |
+| release-dotnet-vstest.yml | [![Build Status](https://greyhamwoohoo.visualstudio.com/Public-Automation-Examples/_apis/build/status/Release-DotNet-VsTest-Linux?branchName=master)](https://greyhamwoohoo.visualstudio.com/Public-Automation-Examples/_build/latest?definitionId=21&branchName=master) | Linux: Used for Release Builds. Runs tests and publishes results from all projects and DLLs using dotnet test and vstest (on Linux); builds and runs tests *AGAINST* the Container |
 
 ## Docker
 The CI Docker Build will create a :candidate tagged container; and then wait for it to start; then run the Acceptance Tests against the docker image. 
