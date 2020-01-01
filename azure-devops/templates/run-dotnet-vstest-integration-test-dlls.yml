@@ -1,0 +1,20 @@
+#
+# Run tests using dotnet vsTest
+#
+
+steps:
+- task: DotNetCoreCLI@2
+  displayName: 'Run Integration Tests'
+  inputs:
+    command: custom
+    custom: vstest
+    arguments: '$(System.DefaultWorkingDirectory)/src/Yeha.Api.IntegrationTests/bin/$(Build.Configuration)/netcoreapp3.1/publish/Yeha.Api.IntegrationTests.dll --logger:"trx;LogFileName=DotNet-VsTest-IntegrationTests.trx"'
+
+- task: PublishTestResults@2
+  displayName: 'Publish Test Results **/DotNet-VsTest-IntegrationTests.trx'
+  inputs:
+    testResultsFormat: VSTest
+    testResultsFiles: '**/DotNet-VsTest-IntegrationTests.trx'
+    failTaskOnFailedTests: true
+    testRunTitle: 'Dotnet VsTest: Integration Tests'
+    

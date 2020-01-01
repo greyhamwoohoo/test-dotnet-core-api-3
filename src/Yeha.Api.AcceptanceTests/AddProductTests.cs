@@ -8,6 +8,15 @@ namespace Yeha.Api.AcceptanceTests
     [TestClass]
     public class AddProductTests : AcceptanceTestBase
     {
+        [TestInitialize] 
+        public void RemoveExistingProducts()
+        {
+            var request = Resolve<RemoveAllProductsBuilder>()
+                .Build();
+
+            Client.Execute(request, andExpect: System.Net.HttpStatusCode.OK);
+        }
+
         [TestMethod]
         [TestCategory("Zero")]
         public void WhenZeroProduct_GetAllReturnsEmptyArray()

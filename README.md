@@ -1,11 +1,12 @@
 # test-dotnet-core-api-3
-Bare-bones .Net Core 3.1 API with boot strapped minimalistic test projects... a reference, because I get tired of implementing this again and again :-)
-
-## Work In Progress!
-TO COME: Reporting, Docker Container Testing in Build Pipeline
+Bare-bones .Net Core 3.1 API with boot strapped minimalistic test projects... a reference, because I get tired of implementing this and hunting for snippets again and again :-)
 
 ## Example
-The API service consists of a few controllers (authorized, anonymous, implicit) and an IProduct/IProductRepository implementation that can be overridden in the mock. 
+The API service consists of a few controllers (authorized, anonymous, implicit) and an IProduct/IProductRepository implementation that can be overridden in the Acceptance Tests mock. 
+
+YAML Pipeline will run all categories of tests (from projects using dotnet test; and DLLs using dotnet vstest) and publish separate results for each. 
+
+YAML Pipeline will build a container, start it and run Acceptance Tests against the API hosted in the container. 
 
 ## Build Pipelines
 There are three YAML Builds included under the azure-devops folder:
@@ -14,7 +15,17 @@ There are three YAML Builds included under the azure-devops folder:
 | ----- | ----------- |
 | pr.yml | Used for PR Builds. Runs the Unit, Integration and Acceptance Tests from the .csproj files using 'dotnet test' |
 | release-vstest.yml | Used for Release Builds. Same as 'pr.yml' but also runs the tests from DLLs using the Visual Studio Test Runner (on Windows) |
-| release-dotnet-vstest.yml | Used for Release Builds. Same as 'pr.yml' but also runs the tests from DLLs using dotnet vstest (on Linux) |
+| release-dotnet-vstest.yml | Used for Release Builds. Runs tests and publishes results from all projects and DLLs using dotnet test and vstest (on Linux); builds and runs tests *AGAINST* the Container |
+
+
+
+## Docker
+The CI Docker Build will create a :candidate tagged container; and then wait for it to start; then run the Acceptance Tests against the docker image. 
+
+| Reference | Link |
+| --------- | ---- |
+| Microsoft references for building and running .Net Core Containers in Production | https://github.com/dotnet/dotnet-docker/tree/master/samples |
+| Diagnostic Services for APIs | http://geekswithblogs.net/EltonStoneman/archive/2011/12/12/the-value-of-a-diagnostics-service.aspx |
 
 ## Integration Tests
 Integration Tests use the Microsoft 'TestServer' implementation (in memory) and HttpClient.

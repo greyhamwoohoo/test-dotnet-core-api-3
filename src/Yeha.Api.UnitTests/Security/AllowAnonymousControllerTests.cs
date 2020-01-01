@@ -16,6 +16,7 @@ namespace Yeha.Api.UnitTests.Security
     [AcknowledgeAllowAnonymousController(Controller = typeof(AllowAnonymousPingController))]
     [AcknowledgeAllowAnonymousController(Controller = typeof(PrimitivesController))]
     [AcknowledgeAllowAnonymousController(Controller = typeof(ProductsController))]
+    [AcknowledgeAllowAnonymousController(Controller = typeof(DiagnosticsController))]
     public class AllowAnonymousControllerTests : SecurityTestBase
     {
         [TestMethod]
