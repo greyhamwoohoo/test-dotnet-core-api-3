@@ -1,0 +1,19 @@
+#
+# Run tests using dotnet vsTest
+#
+
+steps:
+- task: DotNetCoreCLI@2
+  displayName: 'Run Unit Tests'
+  inputs:
+    command: custom
+    custom: vstest
+    arguments: '$(System.DefaultWorkingDirectory)/src/Yeha.Api.UnitTests/bin/$(Build.Configuration)/netcoreapp3.1/publish/Yeha.Api.UnitTests.dll --logger:"trx;LogFileName=DotNet-VsTest-UnitTests.trx"'
+
+- task: PublishTestResults@2
+  displayName: 'Publish Test Results **/DotNet-VsTest-UnitTests.trx'
+  inputs:
+    testResultsFormat: VSTest
+    testResultsFiles: '**/*DotNet-VsTest-UnitTests.trx'
+    failTaskOnFailedTests: true
+    testRunTitle: 'Dotnet VsTest: Unit Tests'

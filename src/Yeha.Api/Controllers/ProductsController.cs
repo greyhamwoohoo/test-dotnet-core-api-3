@@ -35,5 +35,12 @@ namespace Yeha.Api.Controllers
 
             return Ok();
         }
+
+        [HttpDelete]
+        public ActionResult RemoveAll()
+        {
+            _productRepository.RemoveAll();
+            return Ok();
+        }
     }
 }

@@ -26,6 +26,11 @@ namespace Yeha.Api.Services
             return _products.Select(p => (Product) p);
         }
 
+        public void RemoveAll()
+        {
+            _products.Clear();
+        }
+
         private bool Exists(string id)
         {
             var match = _products.FirstOrDefault(f => f.Id == id);

@@ -1,0 +1,20 @@
+#
+# Run tests using dotnet vsTest
+#
+
+steps:
+- task: DotNetCoreCLI@2
+  displayName: 'Run Acceptance Tests'
+  inputs:
+    command: custom
+    custom: vstest
+    arguments: '$(System.DefaultWorkingDirectory)/src/Yeha.Api.AcceptanceTests/bin/$(Build.Configuration)/netcoreapp3.1/publish/Yeha.Api.AcceptanceTests.dll --logger:"trx;LogFileName=DotNet-VsTest-AcceptanceTests.trx"'
+
+- task: PublishTestResults@2
+  displayName: 'Publish Test Results **/DotNet-VsTest-AcceptanceTests.trx'
+  inputs:
+    testResultsFormat: VSTest
+    testResultsFiles: '**/DotNet-VsTest-AcceptanceTests.trx'
+    failTaskOnFailedTests: true
+    testRunTitle: 'Dotnet VsTest: Acceptance Tests'
+

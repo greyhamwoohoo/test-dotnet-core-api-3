@@ -21,5 +21,9 @@ namespace Yeha.Api.AcceptanceTests.Mocks
                 new Product() { Description = "This Is The Mocked Description", Id = "MockedId" }
             };
         }
+
+        public void RemoveAll()
+        {
+        }
     }
 }

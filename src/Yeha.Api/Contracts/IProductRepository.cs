@@ -7,5 +7,6 @@ namespace Yeha.Api.Contracts
     {
         void Add(IProduct product);
         IEnumerable<Product> GetAll();
+        void RemoveAll();
     }
 }

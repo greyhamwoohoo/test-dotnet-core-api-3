@@ -12,6 +12,7 @@ namespace Yeha.Api.TestSdk.Infrastructure
             container.AddScoped<GetAllProductsRequestBuilder>();
             container.AddScoped<AddProductRequestBuilder>();
             container.AddScoped<GetPingAuthorizedByMiddlewareBuilder>();
+            container.AddScoped<RemoveAllProductsBuilder>();
             container.AddScoped<IClient, Client>();
         }
     }

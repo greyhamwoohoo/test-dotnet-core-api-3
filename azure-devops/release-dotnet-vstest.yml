@@ -39,4 +39,45 @@ stages:
     - powershell: 'Get-ChildItem -Recurse'
       workingDirectory: src
       displayName: 'PowerShell Script'
-    - template: templates/run-tests-from-dlls-dotnet-vstest.yml
+    - template: templates/run-dotnet-vstest-unit-test-dlls.yml
+    - template: templates/run-dotnet-vstest-integration-test-dlls.yml
+    - template: templates/run-dotnet-vstest-acceptance-test-dlls.yml
+
+    - powershell: |
+        docker build -f azure-devops/Dockerfile src -t yeha-api:candidate
+
+      failOnStderr: true
+      displayName: 'Docker: Build Container'
+
+    # Start the Container
+    # Wait for the Container to be ready
+    # Set the Test Execution Context to CI
+    # Run the Acceptance Tests (from DLLs)
+    - powershell: |
+        docker run -d -p 5001:80 yeha-api:candidate    
+      
+      failOnStderr: true
+      displayName: 'Docker: Run Docker Container'
+    - task: PowerShell@2
+      displayName: 'Wait For Container'
+      inputs:
+        targetType: filePath
+        filePath: './azure-devops/wait-until-uri-is-ready.ps1'
+        arguments: '-TimeoutInSeconds 60 -Uri http://localhost:5001/api/diagnostics/ready -ExpectStatusCode 200 -Verbose'
+        failOnStderr: true
+
+    - bash: |
+        echo "##vso[task.setvariable variable=YEHA_TEST_EXECUTION_CONTEXT]CI"
+    - task: DotNetCoreCLI@2
+      displayName: 'Container: Run Acceptance Tests'
+      inputs:
+        command: custom
+        custom: vstest
+        arguments: '$(System.DefaultWorkingDirectory)/src/Yeha.Api.AcceptanceTests/bin/$(Build.Configuration)/netcoreapp3.1/publish/Yeha.Api.AcceptanceTests.dll --logger:"trx;LogFileName=Container-Acceptance.trx"'
+    - task: PublishTestResults@2
+      displayName: 'Publish Test Results **/Container-Acceptance.trx'
+      inputs:
+        testResultsFormat: VSTest
+        testResultsFiles: '**/Container-Acceptance.trx'
+        failTaskOnFailedTests: true
+        testRunTitle: 'Docker: Container Tests'

@@ -17,6 +17,7 @@ namespace Yeha.Api.UnitTests.Security
     [AcknowledgeNotAuthorizedController(Controller = typeof(PrimitivesController))]
     [AcknowledgeNotAuthorizedController(Controller = typeof(AllowAnonymousPingController))]
     [AcknowledgeNotAuthorizedController(Controller = typeof(PingAuthorizedByMiddlewareController))]
+    [AcknowledgeNotAuthorizedController(Controller = typeof(DiagnosticsController))]
     public class ControllerAuthorizeTests : SecurityTestBase
     {
         [TestMethod]
