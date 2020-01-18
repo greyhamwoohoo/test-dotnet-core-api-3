@@ -49,6 +49,13 @@ Self-hosts the service using a 'hard' port binding (does not use TestServer in i
 
 Shows Serilog registration and integration; scoped lifetimes; builders. 
 
+### Capture-Replay
+Includes an Interceptor which shows how to intercept any interface call that is backed by a concrete class. In our case, we execute the original implementation of the method and callout with the return value before it returns; this allows us to 'snapshot' the response. 
+This approach can be used at the 'edge' of your service or domain (typically: a Client or Adapter) to collect data using a real integration test; from that point on - just use the snapshot for regression testing, for your CI/CD and fast feedback. 
+
+1. Capture: Store the return value as a snapshot and attach to the test run.  
+2. Replay:  Override the Interface method to return the snapshot
+
 ### Test Execution Context
 To allow the same test to target different environments or URLs, we need to separate the endpoints, URL's, DI configuration/injection, certificates, authorization tokens and so forth from the test itself. 
 
