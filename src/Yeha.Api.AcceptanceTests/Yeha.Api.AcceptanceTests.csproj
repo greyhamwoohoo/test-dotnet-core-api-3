@@ -8,6 +8,9 @@
 
   <ItemGroup>
     <None Remove="serilogSettings.json" />
+    <None Remove="Snapshots\Many.json" />
+    <None Remove="Snapshots\One.json" />
+    <None Remove="Snapshots\Zero.json" />
     <None Remove="TestExecutionContexts\testsettings.CI.json" />
     <None Remove="TestExecutionContexts\testsettings.Development.json" />
     <None Remove="TestExecutionContexts\testsettings.json" />
@@ -20,6 +23,15 @@
     <Content Include="..\Yeha.Api\appsettings.json" Link="appsettings.json" />
     <Content Include="..\Yeha.Api\appsettings.Local.json" Link="appsettings.Local.json" />
     <Content Include="serilogSettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Snapshots\Many.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Snapshots\One.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Snapshots\Zero.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="TestExecutionContexts\testsettings.CI.json">
