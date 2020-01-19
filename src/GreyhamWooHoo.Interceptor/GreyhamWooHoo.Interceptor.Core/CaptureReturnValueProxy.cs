@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using GreyhamWooHoo.Interceptor.Core.Contracts;
+using GreyhamWooHoo.Interceptor.Core.Results;
+using GreyhamWooHoo.Interceptor.Core.Rules;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -16,7 +19,7 @@ namespace Yeha.Api.TestSdk.Interception
     public class CaptureReturnValueProxy<T> : DispatchProxy
     {
         private T _originalImplementation;
-        private IEnumerable<CaptureReturnValueRule> _interceptors;
+        private IEnumerable<ICaptureReturnValueRule> _interceptors;
 
         protected override object Invoke(MethodInfo targetMethod, object[] args)
         {
@@ -34,19 +37,21 @@ namespace Yeha.Api.TestSdk.Interception
             if (interceptedMethod != null)
             {
                 // We now callout with the original value: it is better the recipient serialize / deserialize this by casting to the expected type first. 
-                interceptedMethod.Callback(result, interceptedMethod);
+                var callbackResult = new CaptureReturnValueResult(interceptedMethod);
+
+                interceptedMethod.Callback(callbackResult);
             }
 
             return result;
         }
 
-        private void SetParameters(T originalImplementation, IEnumerable<CaptureReturnValueRule> interceptors)
+        private void SetParameters(T originalImplementation, IEnumerable<ICaptureReturnValueRule> interceptors)
         {
             _originalImplementation = originalImplementation;
             _interceptors = interceptors.Select(i => new CaptureReturnValueRule(i.MethodName, i.Callback));
         }
 
-        public static T Create(T originalImplementation, IEnumerable<CaptureReturnValueRule> interceptors)
+        public static T Create(T originalImplementation, IEnumerable<ICaptureReturnValueRule> interceptors)
         {
             object proxy = Create<T, CaptureReturnValueProxy<T>>();
 
