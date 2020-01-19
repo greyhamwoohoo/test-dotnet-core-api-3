@@ -1,4 +1,6 @@
 ﻿using FluentAssertions;
+using GreyhamWooHoo.Interceptor.Core.Builders;
+using GreyhamWooHoo.Interceptor.Core.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
@@ -7,7 +9,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Yeha.Api.Contracts;
 using Yeha.Api.Services;
-using Yeha.Api.TestSdk.Interception;
 using Yeha.Api.TestSdk.RequestBuilders;
 using Yeha.Api.TestSdk.ResponseModels;
 
@@ -22,18 +23,18 @@ namespace Yeha.Api.AcceptanceTests
     /// 2. Rebuild, then run the Replay tests: the Snapshots will be injected as responses.
     /// </summary>
     [TestClass]
-    public class AddProductCaptureTests : AcceptanceTestBase
+    public class AddProductCaptureTests : ProductTestBase
     {
         // We want to override the DI Container - so we need to host this inprocess
         protected override bool IsInProcessOnly => true;
 
         protected Dictionary<string, string> Snapshots = new Dictionary<string, string>();
 
-        protected void ToSnapshot<T>(object value, ICaptureReturnValueRule rule) where T : class
+        protected void ToSnapshot<T>(IAfterExecutionResult result) where T : class
         {
-            var result = value as T;
-            var asJson = JsonConvert.SerializeObject(result, Formatting.Indented);
-            Snapshots.Add($"{rule.MethodName}", asJson);
+            var returnValue = result.ReturnValue as T;
+            var asJson = JsonConvert.SerializeObject(returnValue, Formatting.Indented);
+            Snapshots.Add($"{result.Rule.MethodName}", asJson);
         }
 
         /// <summary>
@@ -49,9 +50,9 @@ namespace Yeha.Api.AcceptanceTests
             // We will provide our own interface and the original implementation; we will callback "just before" the IProductRepository GetAll() method returns - thereby giving us the return value. 
             var originalImplementation = new ProductRepository();
 
-            var interceptedProductRepository = new CaptureReturnValueProxyBuilder<IProductRepository>()
+            var interceptedProductRepository = new InterceptorProxyBuilder<IProductRepository>()
                 .For(originalImplementation)
-                .InterceptReturnValueOf(theMethodCalled: nameof(IProductRepository.GetAll), andCallback: (returnValue, rule) => ToSnapshot<IEnumerable<IProduct>>(returnValue, rule))
+                .InterceptReturnValueOf(theMethodCalled: nameof(IProductRepository.GetAll), andCallback: result => ToSnapshot<IEnumerable<IProduct>>(result))
                 .Build();
 
             var existingDescriptors = services.Where(s => s.ServiceType == typeof(IProductRepository));
@@ -128,37 +129,6 @@ namespace Yeha.Api.AcceptanceTests
                 .As<ProductCollection>();
 
             products.Count().Should().Be(2, because: "there should be two products. ");
-        }
-
-        private void AssertProductItem(Product product, string id, string description)
-        {
-            Assert.AreEqual(description, product.Description);
-            Assert.AreEqual(id, product.Id);
-        }
-
-        private ProductCollection GetProducts()
-        {
-            // Arrange
-            var request = Resolve<GetAllProductsRequestBuilder>()
-                .Build();
-
-            // Act
-            var response = Client.Execute(request, andExpect: System.Net.HttpStatusCode.OK)
-                .As<ProductCollection>();
-
-            return response;
-        }
-
-        private void AddItem(string id, string description)
-        {
-            // Arrange
-            var request = Resolve<AddProductRequestBuilder>()
-                .WithId(id)
-                .WithDescription(description)
-                .Build();
-
-            // Act
-            Client.Execute(request, andExpect: System.Net.HttpStatusCode.OK);
         }
     }
 }

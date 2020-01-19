@@ -1,12 +1,11 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 using Yeha.Api.TestSdk.RequestBuilders;
-using Yeha.Api.TestSdk.ResponseModels;
 
 namespace Yeha.Api.AcceptanceTests
 {
     [TestClass]
-    public class AddProductTests : AcceptanceTestBase
+    public class AddProductTests : ProductTestBase
     {
         [TestInitialize] 
         public void RemoveExistingProducts()
@@ -36,7 +35,7 @@ namespace Yeha.Api.AcceptanceTests
 
             // Assert
             var products = GetProducts();
-            Assert.AreEqual(1, products.Count);
+            Assert.AreEqual(1, products.Count());
 
             AssertProductItem(products.First(), "the Id", "the Product");
         }
@@ -51,41 +50,10 @@ namespace Yeha.Api.AcceptanceTests
 
             // Assert
             var products = GetProducts();
-            Assert.AreEqual(2, products.Count);
+            Assert.AreEqual(2, products.Count());
 
             AssertProductItem(products.First(), "the Id1", "the Product1");
             AssertProductItem(products.Last(), "the Id2", "the Product2");
-        }
-
-        private void AssertProductItem(Product product, string id, string description)
-        {
-            Assert.AreEqual(description, product.Description);
-            Assert.AreEqual(id, product.Id);
-        }
-
-        private void AddItem(string id, string description)
-        {
-            // Arrange
-            var request = Resolve<AddProductRequestBuilder>()
-                .WithId(id)
-                .WithDescription(description)
-                .Build();
-
-            // Act
-            var response = Client.Execute(request, andExpect: System.Net.HttpStatusCode.OK);
-        }
-
-        private ProductCollection GetProducts()
-        {
-            // Arrange
-            var request = Resolve<GetAllProductsRequestBuilder>()
-                .Build();
-
-            // Act
-            var response = Client.Execute(request, andExpect: System.Net.HttpStatusCode.OK)
-                .As<ProductCollection>();
-
-            return response;
         }
     }
 }

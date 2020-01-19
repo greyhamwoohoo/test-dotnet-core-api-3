@@ -56,6 +56,14 @@ This approach can be used at the 'edge' of your service or domain (typically: a 
 1. Capture: Store the return value as a snapshot and attach to the test run.  
 2. Replay:  Override the Interface method to return the snapshot
 
+### Interceptor
+The Interceptor (and Unit Tests) are present in the following two projects:
+
+1. GreyhamWooHoo.Interceptor.Core
+2. GreyhamWooHoo.Interceptor.Core.UnitTests
+
+The interceptor is used in the Acceptance Tests to intercept the return value(s) of the the Product Repository. 
+
 ### Test Execution Context
 To allow the same test to target different environments or URLs, we need to separate the endpoints, URL's, DI configuration/injection, certificates, authorization tokens and so forth from the test itself. 
 

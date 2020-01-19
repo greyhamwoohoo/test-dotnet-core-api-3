@@ -3,8 +3,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 using Yeha.Api.AcceptanceTests.Mocks;
 using Yeha.Api.Contracts;
-using Yeha.Api.TestSdk.RequestBuilders;
-using Yeha.Api.TestSdk.ResponseModels;
 
 namespace Yeha.Api.AcceptanceTests
 {
@@ -12,7 +10,7 @@ namespace Yeha.Api.AcceptanceTests
     /// Demonstrates how to overload the API DI Container with a mock: handy for mocking out databases, repositories, external services/clients and so forth. 
     /// </summary>
     [TestClass]
-    public class GetProductViaMockTests : AcceptanceTestBase
+    public class GetProductViaMockTests : ProductTestBase
     {
         /// <summary>
         /// Overridden to inject the mock. 
@@ -38,25 +36,6 @@ namespace Yeha.Api.AcceptanceTests
             Assert.AreEqual(1, products.Count);
 
             AssertProductItem(products.First(), "MockedId", "This Is The Mocked Description");
-        }
-
-        private void AssertProductItem(Product product, string id, string description)
-        {
-            Assert.AreEqual(description, product.Description);
-            Assert.AreEqual(id, product.Id);
-        }
-
-        private ProductCollection GetProducts()
-        {
-            // Arrange
-            var request = Resolve<GetAllProductsRequestBuilder>()
-                .Build();
-
-            // Act
-            var response = Client.Execute(request, andExpect: System.Net.HttpStatusCode.OK)
-                .As<ProductCollection>();
-
-            return response;
         }
     }
 }

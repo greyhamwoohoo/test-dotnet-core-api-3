@@ -61,6 +61,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\GreyhamWooHoo.Interceptor\GreyhamWooHoo.Interceptor.Core\GreyhamWooHoo.Interceptor.Core.csproj" />
     <ProjectReference Include="..\Yeha.Api\Yeha.Api.csproj" />
   </ItemGroup>
 
