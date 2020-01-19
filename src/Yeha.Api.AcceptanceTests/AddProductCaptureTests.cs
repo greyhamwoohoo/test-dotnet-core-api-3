@@ -22,7 +22,7 @@ namespace Yeha.Api.AcceptanceTests
     /// 2. Rebuild, then run the Replay tests: the Snapshots will be injected as responses.
     /// </summary>
     [TestClass]
-    public class AddProductCaptureTests : AcceptanceTestBase
+    public class AddProductCaptureTests : ProductTestBase
     {
         // We want to override the DI Container - so we need to host this inprocess
         protected override bool IsInProcessOnly => true;
@@ -128,37 +128,6 @@ namespace Yeha.Api.AcceptanceTests
                 .As<ProductCollection>();
 
             products.Count().Should().Be(2, because: "there should be two products. ");
-        }
-
-        private void AssertProductItem(Product product, string id, string description)
-        {
-            Assert.AreEqual(description, product.Description);
-            Assert.AreEqual(id, product.Id);
-        }
-
-        private ProductCollection GetProducts()
-        {
-            // Arrange
-            var request = Resolve<GetAllProductsRequestBuilder>()
-                .Build();
-
-            // Act
-            var response = Client.Execute(request, andExpect: System.Net.HttpStatusCode.OK)
-                .As<ProductCollection>();
-
-            return response;
-        }
-
-        private void AddItem(string id, string description)
-        {
-            // Arrange
-            var request = Resolve<AddProductRequestBuilder>()
-                .WithId(id)
-                .WithDescription(description)
-                .Build();
-
-            // Act
-            Client.Execute(request, andExpect: System.Net.HttpStatusCode.OK);
         }
     }
 }
