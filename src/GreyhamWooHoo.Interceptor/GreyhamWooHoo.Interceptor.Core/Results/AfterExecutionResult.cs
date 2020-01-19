@@ -2,20 +2,20 @@
 
 namespace GreyhamWooHoo.Interceptor.Core.Results
 {
-    public class CaptureReturnValueResult : ICaptureReturnValueResult
+    public class AfterExecutionResult : IAfterExecutionResult
     {
-        public CaptureReturnValueResult(ICaptureReturnValueRule rule) : this(rule, false, null)
+        public AfterExecutionResult(IAfterExecutionRule rule) : this(rule, false, null)
         {
         }
 
-        public CaptureReturnValueResult(ICaptureReturnValueRule rule, bool hasReturnValue, object returnValue)
+        public AfterExecutionResult(IAfterExecutionRule rule, bool hasReturnValue, object returnValue)
         {
             Rule = rule;
             HasReturnValue = hasReturnValue;
             ReturnValue = returnValue;
         }
 
-        public ICaptureReturnValueRule Rule { get; }
+        public IAfterExecutionRule Rule { get; }
 
         public bool HasReturnValue { get; }
 
