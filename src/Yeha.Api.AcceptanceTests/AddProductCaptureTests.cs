@@ -1,4 +1,6 @@
 ﻿using FluentAssertions;
+using GreyhamWooHoo.Interceptor.Core.Builders;
+using GreyhamWooHoo.Interceptor.Core.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
@@ -7,7 +9,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Yeha.Api.Contracts;
 using Yeha.Api.Services;
-using Yeha.Api.TestSdk.Interception;
 using Yeha.Api.TestSdk.RequestBuilders;
 using Yeha.Api.TestSdk.ResponseModels;
 
@@ -29,11 +30,11 @@ namespace Yeha.Api.AcceptanceTests
 
         protected Dictionary<string, string> Snapshots = new Dictionary<string, string>();
 
-        protected void ToSnapshot<T>(object value, ICaptureReturnValueRule rule) where T : class
+        protected void ToSnapshot<T>(IAfterExecutionResult result) where T : class
         {
-            var result = value as T;
-            var asJson = JsonConvert.SerializeObject(result, Formatting.Indented);
-            Snapshots.Add($"{rule.MethodName}", asJson);
+            var returnValue = result.ReturnValue as T;
+            var asJson = JsonConvert.SerializeObject(returnValue, Formatting.Indented);
+            Snapshots.Add($"{result.Rule.MethodName}", asJson);
         }
 
         /// <summary>
@@ -49,9 +50,9 @@ namespace Yeha.Api.AcceptanceTests
             // We will provide our own interface and the original implementation; we will callback "just before" the IProductRepository GetAll() method returns - thereby giving us the return value. 
             var originalImplementation = new ProductRepository();
 
-            var interceptedProductRepository = new CaptureReturnValueProxyBuilder<IProductRepository>()
+            var interceptedProductRepository = new InterceptorProxyBuilder<IProductRepository>()
                 .For(originalImplementation)
-                .InterceptReturnValueOf(theMethodCalled: nameof(IProductRepository.GetAll), andCallback: (returnValue, rule) => ToSnapshot<IEnumerable<IProduct>>(returnValue, rule))
+                .InterceptReturnValueOf(theMethodCalled: nameof(IProductRepository.GetAll), andCallback: result => ToSnapshot<IEnumerable<IProduct>>(result))
                 .Build();
 
             var existingDescriptors = services.Where(s => s.ServiceType == typeof(IProductRepository));
