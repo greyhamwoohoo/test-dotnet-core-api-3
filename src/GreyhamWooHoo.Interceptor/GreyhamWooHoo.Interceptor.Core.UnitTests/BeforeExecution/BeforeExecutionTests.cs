@@ -1,6 +1,8 @@
 ﻿using FluentAssertions;
+using FluentAssertions.Execution;
 using GreyhamWooHoo.Interceptor.Core.Builders;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
 
 namespace GreyhamWooHoo.Interceptor.Core.UnitTests.BeforeExecution
 {
@@ -23,12 +25,14 @@ namespace GreyhamWooHoo.Interceptor.Core.UnitTests.BeforeExecution
         {
             // Arrange
             var args = default(object[]);
+            var parameters = default(IDictionary<string, object>);
             var calledBack = false;
 
             var proxy = _builder.InterceptBeforeExecutionOf(theMethodNamed: nameof(IBeforeExecutionTestInterface.TheMethodWithNoParameters), andCalledbackWith: result =>
             {
                 calledBack = true;
                 args = result.Args;
+                parameters = result.Parameters;
             })
             .Build();
 
@@ -36,11 +40,17 @@ namespace GreyhamWooHoo.Interceptor.Core.UnitTests.BeforeExecution
             proxy.TheMethodWithNoParameters();
 
             // Assert
-            calledBack.Should().BeTrue(because: "the callback should have been invoked. ");
-            
-            args.Should().NotBeNull(because: "the callback will have been invoked with no arguments. ");
-            
-            _originalImplementation.Message.Should().Be("Invoked", because: "it is set by the method after the calledback. ");
+            using (var scope = new AssertionScope())
+            {
+                calledBack.Should().BeTrue(because: "the callback should have been invoked. ");
+
+                args.Should().NotBeNull(because: "the callback will have been invoked with no arguments. ");
+                args.Length.Should().Be(0, because: "the method has no parameters. ");
+
+                parameters.Count.Should().Be(0, because: "the method has no parameters ");
+
+                _originalImplementation.Message.Should().Be("Invoked", because: "it is set by the method after the calledback. ");
+            }
         }
 
         [TestMethod]
@@ -48,12 +58,14 @@ namespace GreyhamWooHoo.Interceptor.Core.UnitTests.BeforeExecution
         {
             // Arrange
             var args = default(object[]);
+            var parameters = default(IDictionary<string, object>);
             var calledBack = false;
 
             var proxy = _builder.InterceptBeforeExecutionOf(theMethodNamed: nameof(IBeforeExecutionTestInterface.TheMethodWithOneParameter), andCalledbackWith: result =>
             {
                 calledBack = true;
                 args = result.Args;
+                parameters = result.Parameters;
             })
             .Build();
 
@@ -61,13 +73,19 @@ namespace GreyhamWooHoo.Interceptor.Core.UnitTests.BeforeExecution
             proxy.TheMethodWithOneParameter(10);
 
             // Assert
-            calledBack.Should().BeTrue(because: "the callback should have been invoked. ");
+            using (var scope = new AssertionScope())
+            {
+                calledBack.Should().BeTrue(because: "the callback should have been invoked. ");
 
-            args.Should().NotBeNull(because: "the callback will have been invoked with one arguments. ");
-            args.Length.Should().Be(1, because: "there is exactly one parameter in the method that was invoked. ");
-            ((int)args[0]).Should().Be(10, because: "that is the value of the parameter passed in. ");
-            
-            _originalImplementation.Message.Should().Be("Invoked: 10", because: "it is set by the method after the calledback. ");
+                args.Should().NotBeNull(because: "the callback will have been invoked with one arguments. ");
+                args.Length.Should().Be(1, because: "there is exactly one parameter in the method that was invoked. ");
+                ((int)args[0]).Should().Be(10, because: "that is the value of the parameter passed in. ");
+
+                parameters.Count.Should().Be(1, because: "the method has one parameter. ");
+                ((int)parameters["parameter1"]).Should().Be(10, because: "that is the value of the one parameter. ");
+
+                _originalImplementation.Message.Should().Be("Invoked: 10", because: "it is set by the method after the calledback. ");
+            }
         }
 
         [TestMethod]
@@ -75,12 +93,14 @@ namespace GreyhamWooHoo.Interceptor.Core.UnitTests.BeforeExecution
         {
             // Arrange
             var args = default(object[]);
+            var parameters = default(IDictionary<string, object>);
             var calledBack = false;
 
             var proxy = _builder.InterceptBeforeExecutionOf(theMethodNamed: nameof(IBeforeExecutionTestInterface.TheMethodWithManyParameters), andCalledbackWith: result =>
             {
                 calledBack = true;
                 args = result.Args;
+                parameters = result.Parameters;
             })
             .Build();
 
@@ -88,14 +108,21 @@ namespace GreyhamWooHoo.Interceptor.Core.UnitTests.BeforeExecution
             proxy.TheMethodWithManyParameters(20, 30);
 
             // Assert
-            calledBack.Should().BeTrue(because: "the callback should have been invoked. ");
+            using (var scope = new AssertionScope())
+            {
+                calledBack.Should().BeTrue(because: "the callback should have been invoked. ");
 
-            args.Should().NotBeNull(because: "the callback will have been invoked with one arguments. ");
-            args.Length.Should().Be(2, because: "there is exactly one parameter in the method that was invoked. ");
-            ((int)args[0]).Should().Be(20, because: "that is the value of the parameter passed in. ");
-            ((int)args[1]).Should().Be(30, because: "that is the value of the parameter passed in. ");
+                args.Should().NotBeNull(because: "the callback will have been invoked with one arguments. ");
+                args.Length.Should().Be(2, because: "there is exactly one parameter in the method that was invoked. ");
+                ((int)args[0]).Should().Be(20, because: "that is the value of the parameter passed in. ");
+                ((int)args[1]).Should().Be(30, because: "that is the value of the parameter passed in. ");
 
-            _originalImplementation.Message.Should().Be("Invoked: 20 30", because: "it is set by the method after the calledback. ");
+                parameters.Count.Should().Be(2, because: "the method has two parameters. ");
+                ((int)parameters["parameter1"]).Should().Be(20, because: "that is the value of the first parameter. ");
+                ((int)parameters["parameter2"]).Should().Be(30, because: "that is the value of the second parameter. ");
+
+                _originalImplementation.Message.Should().Be("Invoked: 20 30", because: "it is set by the method after the calledback. ");
+            }
         }
     }
 }

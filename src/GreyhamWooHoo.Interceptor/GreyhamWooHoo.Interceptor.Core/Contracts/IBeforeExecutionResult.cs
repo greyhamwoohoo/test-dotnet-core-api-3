@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace GreyhamWooHoo.Interceptor.Core.Contracts
 {
@@ -9,5 +7,6 @@ namespace GreyhamWooHoo.Interceptor.Core.Contracts
         IBeforeExecutionRule Rule { get; }
 
         object[] Args { get; }
+        IDictionary<string, object> Parameters { get; }
     }
 }

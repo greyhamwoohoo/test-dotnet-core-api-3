@@ -33,7 +33,8 @@ namespace GreyhamWooHoo.Interceptor.Core
             {
                 try
                 {
-                    var beforeExecutionResult = new BeforeExectionResult(beforeRule, args);
+                    var parameters = targetMethod.GetParameters();
+                    var beforeExecutionResult = new BeforeExectionResult(beforeRule, args, parameters);
                     beforeRule.Callback(beforeExecutionResult);
                 }
                 catch
