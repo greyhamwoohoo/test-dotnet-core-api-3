@@ -2,7 +2,7 @@
 
 namespace GreyhamWooHoo.Interceptor.Core.UnitTests.ReturnValue
 {
-    public class ReturnValueImplementation : IReturnValueInterface
+    public class AfterExecutionTestImplementation : IAfterExecutionTestInterface
     {
         public string Message { get; set; }
 

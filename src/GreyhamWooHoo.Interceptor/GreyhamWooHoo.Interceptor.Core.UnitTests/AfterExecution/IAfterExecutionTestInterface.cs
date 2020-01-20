@@ -2,7 +2,7 @@
 
 namespace GreyhamWooHoo.Interceptor.Core.UnitTests.ReturnValue
 {
-    interface IReturnValueInterface
+    interface IAfterExecutionTestInterface
     {
         void TheVoidMethod();
         int TheIntMethod();

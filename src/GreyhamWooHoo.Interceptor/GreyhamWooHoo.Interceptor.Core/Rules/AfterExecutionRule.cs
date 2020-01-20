@@ -11,8 +11,8 @@ namespace GreyhamWooHoo.Interceptor.Core.Rules
             Callback = callback;
         }
 
-        public string MethodName { get; set; }
-        public Action<IAfterExecutionResult> Callback { get; set; }
+        public string MethodName { get; }
+        public Action<IAfterExecutionResult> Callback { get; }
 
         public IAfterExecutionRule Copy()
         {

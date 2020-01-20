@@ -20,16 +20,31 @@ namespace GreyhamWooHoo.Interceptor.Core
     public class InterceptorProxy<T> : DispatchProxy
     {
         private T _originalImplementation;
-        private IEnumerable<IAfterExecutionRule> _interceptors;
+        private IEnumerable<IBeforeExecutionRule> _beforeExecutionInterceptors;
+        private IEnumerable<IAfterExecutionRule> _afterExecutionInterceptors;
         private Action<Task> _taskWaiter;
 
         protected override object Invoke(MethodInfo targetMethod, object[] args)
         {
             var name = targetMethod.Name;
 
+            var beforeRule = _beforeExecutionInterceptors.FirstOrDefault(f => f.MethodName == name);
+            if(beforeRule != null)
+            {
+                try
+                {
+                    var beforeExecutionResult = new BeforeExectionResult(beforeRule, args);
+                    beforeRule.Callback(beforeExecutionResult);
+                }
+                catch
+                {
+                    // Design Decision: if something goes wrong in the callout, we sink it and continue execution. 
+                }
+            }
+
             var result = targetMethod.Invoke(_originalImplementation, args);
 
-            var interceptedMethod = _interceptors.FirstOrDefault(f => f.MethodName == name);
+            var interceptedMethod = _afterExecutionInterceptors.FirstOrDefault(f => f.MethodName == name);
             if (interceptedMethod == null)
             {
                 return result;
@@ -87,22 +102,25 @@ namespace GreyhamWooHoo.Interceptor.Core
             return result;
         }
 
-        private void SetParameters(T originalImplementation, IEnumerable<IAfterExecutionRule> interceptors, Action<Task> taskWaiter)
+        private void SetParameters(T originalImplementation, IEnumerable<IBeforeExecutionRule> beforeExecutionRules, IEnumerable<IAfterExecutionRule> afterExecutionRules, Action<Task> taskWaiter)
         {
             _originalImplementation = originalImplementation;
             _taskWaiter = taskWaiter;
-            _interceptors = interceptors.Select(i => new AfterExecutionRule(i.MethodName, i.Callback));
+            _beforeExecutionInterceptors = beforeExecutionRules.Select(i => new BeforeExecutionRule(i.MethodName, i.Callback));
+            _afterExecutionInterceptors = afterExecutionRules.Select(i => new AfterExecutionRule(i.MethodName, i.Callback));
+
         }
 
-        public static T Create(T originalImplementation, IEnumerable<IAfterExecutionRule> interceptors, Action<Task> taskWaiter)
+        public static T Create(T originalImplementation, IEnumerable<IBeforeExecutionRule> beforeExecutionRules, IEnumerable<IAfterExecutionRule> afterExecutionRules, Action<Task> taskWaiter)
         {
             if (null == originalImplementation) throw new ArgumentNullException(nameof(originalImplementation));
-            if (null == interceptors) throw new ArgumentNullException(nameof(interceptors));
+            if (null == beforeExecutionRules) throw new ArgumentNullException(nameof(beforeExecutionRules));
+            if (null == afterExecutionRules) throw new ArgumentNullException(nameof(afterExecutionRules));
             if (null == taskWaiter) throw new ArgumentNullException(nameof(taskWaiter));
 
             object proxy = Create<T, InterceptorProxy<T>>();
 
-            ((InterceptorProxy<T>)proxy).SetParameters(originalImplementation, interceptors, taskWaiter);
+            ((InterceptorProxy<T>)proxy).SetParameters(originalImplementation, beforeExecutionRules, afterExecutionRules, taskWaiter);
 
             return (T)proxy;
         }

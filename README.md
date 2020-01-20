@@ -33,7 +33,6 @@ Integration Tests use the Microsoft 'TestServer' implementation (in memory) and 
 | Integration Tests in .Net Core 3.0 | https://docs.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-3.1 |
 | Converting Integration Tests from 2.0x to 3.0 | https://andrewlock.net/converting-integration-tests-to-net-core-3/ |
 
-
 ### Contract Tests
 A crude (but effective) way to lock in the shapes of your contracts. 
 
@@ -102,3 +101,6 @@ Logging is included using SeriLog both in the ASP.Net Core API and in the test f
 | Serilog Json Configuration | https://github.com/serilog/serilog-settings-configuration |
 
 ## References
+| Reference | Link |
+| --------- | ---- |
+| Aspect Oriented Programming Example (the basis for the Interceptor) | https://www.c-sharpcorner.com/article/aspect-oriented-programming-in-c-sharp-using-dispatchproxy/ |

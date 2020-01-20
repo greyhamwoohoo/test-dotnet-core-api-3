@@ -2,23 +2,22 @@ using FluentAssertions;
 using FluentAssertions.Execution;
 using GreyhamWooHoo.Interceptor.Core.Builders;
 using GreyhamWooHoo.Interceptor.Core.Contracts;
-using GreyhamWooHoo.Interceptor.Core.UnitTests.ReturnValue;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-namespace GreyhamWooHoo.Interceptor.Core.UnitTests
+namespace GreyhamWooHoo.Interceptor.Core.UnitTests.ReturnValue
 {
     [TestClass]
-    public class ReturnValueTests
+    public class AfterExecutionTests
     {
-        private ReturnValueImplementation _originalImplementation = new ReturnValueImplementation();
+        private AfterExecutionTestImplementation _originalImplementation = new AfterExecutionTestImplementation();
 
-        private InterceptorProxyBuilder<IReturnValueInterface> _builder;
+        private InterceptorProxyBuilder<IAfterExecutionTestInterface> _builder;
 
         [TestInitialize]
         public void SetupReturnValueTests()
         {
-            _builder = new InterceptorProxyBuilder<IReturnValueInterface>()
+            _builder = new InterceptorProxyBuilder<IAfterExecutionTestInterface>()
                 .For(_originalImplementation);
         }
 
@@ -26,11 +25,11 @@ namespace GreyhamWooHoo.Interceptor.Core.UnitTests
         public void Void()
         {
             // Arrange
-            var result = default(IAfterExecutionResult);
+            var store = default(IAfterExecutionResult);
 
-            var proxy = _builder.InterceptReturnValueOf(nameof(IReturnValueInterface.TheVoidMethod), (callbackResult) =>
+            var proxy = _builder.InterceptAfterExecutionOf(theMethodCalled: nameof(IAfterExecutionTestInterface.TheVoidMethod), andCallbackWith: result =>
             {
-                result = callbackResult;
+                store = result;
             })
             .Build();
 
@@ -38,7 +37,7 @@ namespace GreyhamWooHoo.Interceptor.Core.UnitTests
             proxy.TheVoidMethod();
 
             // Assert
-            AssertReturnValueIsVoid(nameof(IReturnValueInterface.TheVoidMethod), inResult: result);
+            AssertReturnValueIsVoid(nameof(IAfterExecutionTestInterface.TheVoidMethod), inResult: store);
         }
 
         [TestMethod]
@@ -48,18 +47,18 @@ namespace GreyhamWooHoo.Interceptor.Core.UnitTests
             _originalImplementation.TheVoidMethod();
 
             // Assert
-            _originalImplementation.Message.Should().Be($"Invoked: {nameof(IReturnValueInterface.TheVoidMethod)}", because: "the method should have fully completed without any callbacks. ");
+            _originalImplementation.Message.Should().Be($"Invoked: {nameof(IAfterExecutionTestInterface.TheVoidMethod)}", because: "the method should have fully completed without any callbacks. ");
         }
 
         [TestMethod]
         public void PrimitiveInt()
         {
             // Arrange
-            var result = default(IAfterExecutionResult);
+            var store = default(IAfterExecutionResult);
 
-            var proxy = _builder.InterceptReturnValueOf(nameof(IReturnValueInterface.TheIntMethod), (callbackResult) =>
+            var proxy = _builder.InterceptAfterExecutionOf(theMethodCalled: nameof(IAfterExecutionTestInterface.TheIntMethod), andCallbackWith: result =>
             {
-                result = callbackResult;
+                store = result;
             })
             .Build();
 
@@ -67,7 +66,7 @@ namespace GreyhamWooHoo.Interceptor.Core.UnitTests
             proxy.TheIntMethod();
 
             // Assert
-            AssertReturnValue(nameof(IReturnValueInterface.TheIntMethod), isValue: 10, inResult: result);
+            AssertReturnValue(nameof(IAfterExecutionTestInterface.TheIntMethod), isValue: 10, inResult: store);
         }
 
         [TestMethod]
@@ -77,18 +76,18 @@ namespace GreyhamWooHoo.Interceptor.Core.UnitTests
             _originalImplementation.TheIntMethod();
 
             // Assert
-            _originalImplementation.Message.Should().Be($"Invoked: {nameof(IReturnValueInterface.TheIntMethod)}", because: "the method should have fully completed without any callbacks. ");
+            _originalImplementation.Message.Should().Be($"Invoked: {nameof(IAfterExecutionTestInterface.TheIntMethod)}", because: "the method should have fully completed without any callbacks. ");
         }
 
         [TestMethod]
         public void TaskVoid()
         {
             // Arrange
-            var result = default(IAfterExecutionResult);
+            var store = default(IAfterExecutionResult);
 
-            var proxy = _builder.InterceptReturnValueOf(nameof(IReturnValueInterface.TheTaskVoidMethod), (callbackResult) =>
+            var proxy = _builder.InterceptAfterExecutionOf(theMethodCalled: nameof(IAfterExecutionTestInterface.TheTaskVoidMethod), andCallbackWith: result =>
             {
-                result = callbackResult;
+                store = result;
             })
             .Build();
 
@@ -98,7 +97,7 @@ namespace GreyhamWooHoo.Interceptor.Core.UnitTests
             task.Wait();
 
             // Assert
-            AssertReturnValueIsVoid(nameof(IReturnValueInterface.TheTaskVoidMethod), inResult: result);
+            AssertReturnValueIsVoid(nameof(IAfterExecutionTestInterface.TheTaskVoidMethod), inResult: store);
         }
 
         [TestMethod]
@@ -108,18 +107,18 @@ namespace GreyhamWooHoo.Interceptor.Core.UnitTests
             _originalImplementation.TheTaskVoidMethod().Wait();
 
             // Assert
-            _originalImplementation.Message.Should().Be($"Invoked: {nameof(IReturnValueInterface.TheTaskVoidMethod)}", because: "the method should have fully completed without any callbacks. ");
+            _originalImplementation.Message.Should().Be($"Invoked: {nameof(IAfterExecutionTestInterface.TheTaskVoidMethod)}", because: "the method should have fully completed without any callbacks. ");
         }
 
         [TestMethod]
         public void TaskPrimitiveInt()
         {
             // Arrange
-            var result = default(IAfterExecutionResult);
+            var store = default(IAfterExecutionResult);
 
-            var proxy = _builder.InterceptReturnValueOf(nameof(IReturnValueInterface.TheTaskIntMethod), (callbackResult) =>
+            var proxy = _builder.InterceptAfterExecutionOf(theMethodCalled: nameof(IAfterExecutionTestInterface.TheTaskIntMethod), andCallbackWith: result =>
             {
-                result = callbackResult;
+                store = result;
             })
             .Build();
 
@@ -129,7 +128,7 @@ namespace GreyhamWooHoo.Interceptor.Core.UnitTests
             // Assert
             task.Result.Should().Be(10, because: "the task should have completed by now. ");
 
-            AssertReturnValue(nameof(IReturnValueInterface.TheTaskIntMethod), isValue: 10, inResult: result);
+            AssertReturnValue(nameof(IAfterExecutionTestInterface.TheTaskIntMethod), isValue: 10, inResult: store);
         }
 
         [TestMethod]
@@ -141,7 +140,7 @@ namespace GreyhamWooHoo.Interceptor.Core.UnitTests
 
             // Assert
             task.Result.Should().Be(10, because: "the task should have completed by now. ");
-            _originalImplementation.Message.Should().Be($"Invoked: {nameof(IReturnValueInterface.TheTaskIntMethod)}", because: "the method should have fully completed without any callbacks. ");
+            _originalImplementation.Message.Should().Be($"Invoked: {nameof(IAfterExecutionTestInterface.TheTaskIntMethod)}", because: "the method should have fully completed without any callbacks. ");
         }
 
         [TestMethod]
@@ -151,9 +150,9 @@ namespace GreyhamWooHoo.Interceptor.Core.UnitTests
             // Arrange
             var result = default(IAfterExecutionResult);
 
-            var proxy = _builder.InterceptReturnValueOf(nameof(IReturnValueInterface.TheExceptionTaskMethod), (callbackResult) =>
+            var proxy = _builder.InterceptAfterExecutionOf(theMethodCalled: nameof(IAfterExecutionTestInterface.TheExceptionTaskMethod), andCallbackWith: result =>
             {
-                result = callbackResult;
+                result = result;
             })
             .Build();
 
@@ -177,7 +176,7 @@ namespace GreyhamWooHoo.Interceptor.Core.UnitTests
             using (var scope = new AssertionScope())
             {
                 inResult.HasReturnValue.Should().BeTrue(because: "the method is expected to return a primitive type. ");
-                inResult.ReturnValue.Should().Be(10, because: "that is the hard coded value returned from the method. ");
+                inResult.ReturnValue.Should().Be(isValue, because: "that is the hard coded value returned from the method. ");
             }
 
             inResult.Rule.Should().NotBeNull(because: "the intercept rule should always be passed to the callback. ");

@@ -2,10 +2,9 @@
 
 namespace GreyhamWooHoo.Interceptor.Core.Contracts
 {
-    public interface IAfterExecutionRule
+    public interface IAfterExecutionRule : IExecutionRule
     {
-        Action<IAfterExecutionResult> Callback { get; set; }
-        string MethodName { get; set; }
+        Action<IAfterExecutionResult> Callback { get; }
 
         IAfterExecutionRule Copy();
     }
