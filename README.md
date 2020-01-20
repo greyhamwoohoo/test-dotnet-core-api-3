@@ -53,7 +53,8 @@ Includes an Interceptor which shows how to intercept any interface call that is 
 This approach can be used at the 'edge' of your service or domain (typically: a Client or Adapter) to collect data using a real integration test; from that point on - just use the snapshot for regression testing, for your CI/CD and fast feedback. 
 
 1. Capture: Store the return value as a snapshot and attach to the test run.  
-2. Replay:  Override the Interface method to return the snapshot
+2. Replay:  Override the Interface method to return the snapshot using the Stub functionality
+3. Any:     Capture the args/parameters sent to a method before it is called; assert on the contents of these values
 
 ### Interceptor
 The Interceptor (and Unit Tests) are present in the following two projects:
@@ -61,7 +62,13 @@ The Interceptor (and Unit Tests) are present in the following two projects:
 1. GreyhamWooHoo.Interceptor.Core
 2. GreyhamWooHoo.Interceptor.Core.UnitTests
 
-The interceptor is used in the Acceptance Tests to intercept the return value(s) of the the Product Repository. 
+The interceptor is used in the Acceptance Tests to intercept the OnBefore/OnAfter method calls and to Stub results. 
+
+This has many limitations! Including:
+
+1. The implementation does not support overloaded methods
+2. Each method to be intercepted must have a unique name. 
+3. There are no smart stubbing options: if a return value is a Task, you must use Task.From... in order to satisfy the original expectations.
 
 ### Test Execution Context
 To allow the same test to target different environments or URLs, we need to separate the endpoints, URL's, DI configuration/injection, certificates, authorization tokens and so forth from the test itself. 

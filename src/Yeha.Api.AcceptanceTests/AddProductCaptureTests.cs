@@ -52,7 +52,7 @@ namespace Yeha.Api.AcceptanceTests
 
             var interceptedProductRepository = new InterceptorProxyBuilder<IProductRepository>()
                 .For(originalImplementation)
-                .InterceptReturnValueOf(theMethodCalled: nameof(IProductRepository.GetAll), andCallback: result => ToSnapshot<IEnumerable<IProduct>>(result))
+                .InterceptAfterExecutionOf(theMethodCalled: nameof(IProductRepository.GetAll), andCallbackWith: result => ToSnapshot<IEnumerable<IProduct>>(result))
                 .Build();
 
             var existingDescriptors = services.Where(s => s.ServiceType == typeof(IProductRepository));

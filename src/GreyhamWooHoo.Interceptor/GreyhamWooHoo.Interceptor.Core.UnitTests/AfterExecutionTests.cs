@@ -2,15 +2,16 @@ using FluentAssertions;
 using FluentAssertions.Execution;
 using GreyhamWooHoo.Interceptor.Core.Builders;
 using GreyhamWooHoo.Interceptor.Core.Contracts;
+using GreyhamWooHoo.Interceptor.Core.UnitTests.ReturnValue;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-namespace GreyhamWooHoo.Interceptor.Core.UnitTests.ReturnValue
+namespace GreyhamWooHoo.Interceptor.Core.UnitTests
 {
     [TestClass]
     public class AfterExecutionTests
     {
-        private AfterExecutionTestImplementation _originalImplementation = new AfterExecutionTestImplementation();
+        private readonly AfterExecutionTestImplementation _originalImplementation = new AfterExecutionTestImplementation();
 
         private InterceptorProxyBuilder<IAfterExecutionTestInterface> _builder;
 
@@ -148,11 +149,11 @@ namespace GreyhamWooHoo.Interceptor.Core.UnitTests.ReturnValue
         public void TaskThrowsException()
         {
             // Arrange
-            var result = default(IAfterExecutionResult);
+            var store = default(IAfterExecutionResult);
 
             var proxy = _builder.InterceptAfterExecutionOf(theMethodCalled: nameof(IAfterExecutionTestInterface.TheExceptionTaskMethod), andCallbackWith: result =>
             {
-                result = result;
+                store = result;
             })
             .Build();
 
