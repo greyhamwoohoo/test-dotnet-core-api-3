@@ -12,7 +12,7 @@ using Yeha.Api.Services;
 using Yeha.Api.TestSdk.RequestBuilders;
 using Yeha.Api.TestSdk.ResponseModels;
 
-namespace Yeha.Api.AcceptanceTests
+namespace Yeha.Api.AcceptanceTests.CaptureReplayViaInterceptor
 {
     /// <summary>
     /// Demonstrates how to "intercept" interface method calls and capture the return value as a test attachment. 

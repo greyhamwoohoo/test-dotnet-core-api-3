@@ -1,10 +1,7 @@
 ﻿using FluentAssertions;
 using GreyhamWooHoo.Interceptor.Core.Builders;
-using GreyhamWooHoo.Interceptor.Core.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Yeha.Api.Contracts;
@@ -12,12 +9,16 @@ using Yeha.Api.Services;
 using Yeha.Api.TestSdk.RequestBuilders;
 using Yeha.Api.TestSdk.ResponseModels;
 
-namespace Yeha.Api.AcceptanceTests
+namespace Yeha.Api.AcceptanceTests.CaptureReplayViaInterceptor
 {
     /// <summary>
-    /// Demonstrates how to stub method calls using the interceptor. 
+    /// Demonstrates how to stub method calls using the interceptor. Instead of constructing the object, you could read and deserialize the Snapshots contents by using:
     /// 
-    /// This only includes a single example... 
+    /// var snapshotPath = System.IO.Path.Combine(TestContext.DeploymentDirectory, "Snapshots", "thenthesnapshotname.json")
+    /// var content = System.IO.File.ReadAllText(snapshotPath)
+    /// var stubValue = JsonConvert.Deserialize<....>(content)
+    /// 
+    /// This includes only a single example. 
     /// </summary>
     [TestClass]
     public class AddProductReplayTests : ProductTestBase
@@ -35,11 +36,11 @@ namespace Yeha.Api.AcceptanceTests
             // The original interface is: IProductRepository
             // The original implementation is: ProductRepository
             var originalImplementation = new ProductRepository();
-
+            
             var interceptedProductRepository = new InterceptorProxyBuilder<IProductRepository>()
                 .For(originalImplementation)
                 .InterceptAndStub(theMethodCalled: nameof(IProductRepository.GetAll), withValue: new List<Models.Product>()
-                { 
+                {
                     new Models.Product() { Id = "TheStubbedItemId1", Description = "TheStubbedItemDescription1" },
                     new Models.Product() { Id = "TheStubbedItemId2", Description = "TheStubbedItemDescription2" }
                 })
