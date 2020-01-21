@@ -16,7 +16,7 @@ namespace GreyhamWooHoo.Interceptor.Core
     /// While the following reference is for Aspect Oriented Programming (static/source-code-level attributes), I have used the general pattern for this interceptor solution:
     /// Reference: https://www.c-sharpcorner.com/article/aspect-oriented-programming-in-c-sharp-using-dispatchproxy/
     /// </remarks>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">Interface to be intercepted. </typeparam>
     public class InterceptorProxy<T> : DispatchProxy
     {
         private T _originalImplementation;
@@ -29,32 +29,9 @@ namespace GreyhamWooHoo.Interceptor.Core
         {
             var name = targetMethod.Name;
 
-            var beforeRule = _beforeExecutionRules.FirstOrDefault(f => f.MethodName == name);
-            if(beforeRule != null)
-            {
-                try
-                {
-                    var parameters = targetMethod.GetParameters();
-                    var beforeExecutionResult = new BeforeExectionResult(beforeRule, args, parameters);
-                    beforeRule.Callback(beforeExecutionResult);
-                }
-                catch
-                {
-                    // Design Decision: if something goes wrong in the callout, we sink it and continue execution. 
-                }
-            }
+            ExecuteBeforeExecutionRules(forTargetMethod: targetMethod, withArgs: args);
 
-            // If stubbed: use that value for the result and continue; else invoke the original method. 
-            var stubbedRule = _stubExecutionRules.FirstOrDefault(f => f.MethodName == name);
-            var result = default(object);
-            if(stubbedRule != null)
-            {
-                result = stubbedRule.Value;
-            }
-            else
-            {
-                result = targetMethod.Invoke(_originalImplementation, args);
-            }
+            var result = ExecuteStubExecutionRules(forTargetMethod: targetMethod, withArgs: args);
 
             var afterRule = _afterExecutionRules.FirstOrDefault(f => f.MethodName == name);
             if (afterRule == null)
@@ -62,31 +39,11 @@ namespace GreyhamWooHoo.Interceptor.Core
                 return result;
             }
 
-            // ASSERTION: We need to callout with the return value. 
             var callbackResult = default(IAfterExecutionResult);
 
             if (result is Task task)
             {
-                // Callback to wait for the task to finish. For some long running tasks, there is the chance a task might not complete before the test finishes... and therefore, the results will not be attached...!
-                _taskWaiter(task);
-
-                // Credit to:
-                // https://www.c-sharpcorner.com/article/aspect-oriented-programming-in-c-sharp-using-dispatchproxy/");
-                object taskResult = null;
-                if (task.GetType().GetTypeInfo().IsGenericType && task.GetType().GetGenericTypeDefinition() == typeof(Task<>))
-                {
-                    var property = task.GetType().GetTypeInfo().GetProperties().FirstOrDefault(p => p.Name == "Result");
-                    if (property != null)
-                    {
-                        taskResult = property.GetValue(task);
-                    }
-
-                    callbackResult = new AfterExecutionResult(afterRule, true, taskResult);
-                }
-                else
-                {
-                    callbackResult = new AfterExecutionResult(afterRule);
-                }
+                callbackResult = WaitForResultOf(task, thatMatchedRule: afterRule);
             }
             else
             {
@@ -108,6 +65,69 @@ namespace GreyhamWooHoo.Interceptor.Core
             catch(Exception)
             {
                 // Design decision: if anything goes wrong in the callback, we do not want to change the result of invoking the method. Therefore, sink the exception. 
+            }
+
+            return result;
+        }
+
+        private IAfterExecutionResult WaitForResultOf(Task task, IAfterExecutionRule thatMatchedRule)
+        {
+            var callbackResult = default(IAfterExecutionResult);
+            
+            // Callback to wait for the task to finish. For some long running tasks, there is the chance a task might not complete before the test finishes... and therefore, the results will not be attached...!
+            _taskWaiter(task);
+
+            // Credit to:
+            // https://www.c-sharpcorner.com/article/aspect-oriented-programming-in-c-sharp-using-dispatchproxy/");
+            object taskResult = null;
+            if (task.GetType().GetTypeInfo().IsGenericType && task.GetType().GetGenericTypeDefinition() == typeof(Task<>))
+            {
+                var property = task.GetType().GetTypeInfo().GetProperties().FirstOrDefault(p => p.Name == "Result");
+                if (property != null)
+                {
+                    taskResult = property.GetValue(task);
+                }
+
+                callbackResult = new AfterExecutionResult(thatMatchedRule, true, taskResult);
+            }
+            else
+            {
+                callbackResult = new AfterExecutionResult(thatMatchedRule);
+            }
+
+            return callbackResult;
+        }
+
+        private void ExecuteBeforeExecutionRules(MethodInfo forTargetMethod, object[] withArgs)
+        {
+            var beforeRule = _beforeExecutionRules.FirstOrDefault(f => f.MethodName == forTargetMethod.Name);
+            if (beforeRule != null)
+            {
+                try
+                {
+                    var parameters = forTargetMethod.GetParameters();
+                    var beforeExecutionResult = new BeforeExectionResult(beforeRule, withArgs, parameters);
+                    beforeRule.Callback(beforeExecutionResult);
+                }
+                catch
+                {
+                    // Design Decision: if something goes wrong in the callout, we sink it and continue execution. 
+                }
+            }
+        }
+
+        private object ExecuteStubExecutionRules(MethodInfo forTargetMethod, object[] withArgs)
+        {
+            // If stubbed: use that value for the result and continue; else invoke the original method. 
+            var stubbedRule = _stubExecutionRules.FirstOrDefault(f => f.MethodName == forTargetMethod.Name);
+            var result = default(object);
+            if (stubbedRule != null)
+            {
+                result = stubbedRule.Value;
+            }
+            else
+            {
+                result = forTargetMethod.Invoke(_originalImplementation, withArgs);
             }
 
             return result;

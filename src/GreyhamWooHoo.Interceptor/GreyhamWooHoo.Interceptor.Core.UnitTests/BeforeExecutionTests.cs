@@ -29,7 +29,7 @@ namespace GreyhamWooHoo.Interceptor.Core.UnitTests
             var parameters = default(IDictionary<string, object>);
             var calledBack = false;
 
-            var proxy = _builder.InterceptBeforeExecutionOf(theMethodNamed: nameof(IBeforeExecutionTestInterface.TheMethodWithNoParameters), andCalledbackWith: result =>
+            var proxy = _builder.InterceptBeforeExecutionOf(theMethodNamed: nameof(IBeforeExecutionTestInterface.TheMethodWithNoParameters), andCallBackWith: result =>
             {
                 calledBack = true;
                 args = result.Args;
@@ -60,7 +60,7 @@ namespace GreyhamWooHoo.Interceptor.Core.UnitTests
             var parameters = default(IDictionary<string, object>);
             var calledBack = false;
 
-            var proxy = _builder.InterceptBeforeExecutionOf(theMethodNamed: nameof(IBeforeExecutionTestInterface.TheMethodWithOneParameter), andCalledbackWith: result =>
+            var proxy = _builder.InterceptBeforeExecutionOf(theMethodNamed: nameof(IBeforeExecutionTestInterface.TheMethodWithOneParameter), andCallBackWith: result =>
             {
                 calledBack = true;
                 args = result.Args;
@@ -93,7 +93,7 @@ namespace GreyhamWooHoo.Interceptor.Core.UnitTests
             var parameters = default(IDictionary<string, object>);
             var calledBack = false;
 
-            var proxy = _builder.InterceptBeforeExecutionOf(theMethodNamed: nameof(IBeforeExecutionTestInterface.TheMethodWithManyParameters), andCalledbackWith: result =>
+            var proxy = _builder.InterceptBeforeExecutionOf(theMethodNamed: nameof(IBeforeExecutionTestInterface.TheMethodWithManyParameters), andCallBackWith: result =>
             {
                 calledBack = true;
                 args = result.Args;

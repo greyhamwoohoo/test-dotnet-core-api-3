@@ -54,9 +54,9 @@ namespace GreyhamWooHoo.Interceptor.Core.Builders
             return this;
         }
 
-        public InterceptorProxyBuilder<T> InterceptBeforeExecutionOf(string theMethodNamed, Action<IBeforeExecutionResult> andCalledbackWith)
+        public InterceptorProxyBuilder<T> InterceptBeforeExecutionOf(string theMethodNamed, Action<IBeforeExecutionResult> andCallBackWith)
         {
-            BeforeExecutionRules.Add(new BeforeExecutionRule(theMethodNamed, andCalledbackWith));
+            BeforeExecutionRules.Add(new BeforeExecutionRule(theMethodNamed, andCallBackWith));
             return this;
         }
 

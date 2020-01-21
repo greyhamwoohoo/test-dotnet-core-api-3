@@ -2,6 +2,6 @@
 {
     public interface IStubExecutionRule : IExecutionRule
     {
-        public object Value { get; }
+        object Value { get; }
     }
 }
