@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace GreyhamWooHoo.Interceptor.Core
 {
     /// <summary>
-    /// Capture the ReturnValue of any methods
+    /// The interceptor will apply rules built using the InterceptorProxyBuilder. Depending on the rules specified, the interceptor will either callout BeforeExecution, AfterExecution or Stub the method. 
     /// </summary>
     /// <remarks>
     /// While the following reference is for Aspect Oriented Programming (static/source-code-level attributes), I have used the general pattern for this interceptor solution:
