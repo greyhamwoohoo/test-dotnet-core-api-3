@@ -49,7 +49,9 @@ Self-hosts the service using a 'hard' port binding (does not use TestServer in i
 Shows Serilog registration and integration; scoped lifetimes; builders. 
 
 ### Capture-Replay
-Includes an Interceptor which shows how to intercept any interface call that is backed by a concrete class. In our case, we execute the original implementation of the method and callout with the return value before it returns; this allows us to 'snapshot' the response. 
+A reference to the Nuget package "GreyhamWooHoo.Intercept.Core" has been added to intercept OnBefore/OnAfter method execution. The source can be found in the references section. 
+
+The Interceptor shows how to intercept any interface call that is backed by a concrete class. In our case, we execute the original implementation of the method and callout with the return value before it returns; this allows us to 'snapshot' the response. 
 This approach can be used at the 'edge' of your service or domain (typically: a Client or Adapter) to collect data using a real integration test; from that point on - just use the snapshot for regression testing, for your CI/CD and fast feedback. 
 
 1. Capture: Store the return value as a snapshot and attach to the test run.  
@@ -111,3 +113,4 @@ Logging is included using SeriLog both in the ASP.Net Core API and in the test f
 | Reference | Link |
 | --------- | ---- |
 | Aspect Oriented Programming Example (the basis for the Interceptor) | https://www.c-sharpcorner.com/article/aspect-oriented-programming-in-c-sharp-using-dispatchproxy/ |
+| GreyhamWooHoo.Interceptor.Core | https://github.com/greyhamwoohoo/interface-interceptor-core |
