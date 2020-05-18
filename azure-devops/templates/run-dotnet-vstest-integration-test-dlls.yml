@@ -12,6 +12,7 @@ steps:
 
 - task: PublishTestResults@2
   displayName: 'Publish Test Results **/DotNet-VsTest-IntegrationTests.trx'
+  condition: succeededOrFailed()
   inputs:
     testResultsFormat: VSTest
     testResultsFiles: '**/DotNet-VsTest-IntegrationTests.trx'

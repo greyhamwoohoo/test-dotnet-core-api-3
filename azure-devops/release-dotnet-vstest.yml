@@ -72,6 +72,7 @@ stages:
         arguments: '$(System.DefaultWorkingDirectory)/src/Yeha.Api.AcceptanceTests/bin/$(Build.Configuration)/netcoreapp3.1/publish/Yeha.Api.AcceptanceTests.dll --logger:"trx;LogFileName=Container-Acceptance.trx"'
     - task: PublishTestResults@2
       displayName: 'Publish Test Results **/Container-Acceptance.trx'
+      condition: succeededOrFailed()
       inputs:
         testResultsFormat: VSTest
         testResultsFiles: '**/Container-Acceptance.trx'
