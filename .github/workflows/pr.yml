@@ -1,0 +1,29 @@
+name: PR
+
+on:
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.101
+    - name: Install dependencies
+      run: dotnet restore Yeha.sln
+      working-directory: src
+    - name: Unit Tests (dotnet test)
+      run: dotnet test --no-restore --configuration Release Yeha.Api.UnitTests.csproj
+      working-directory: src/Yeha.Api.UnitTests
+    - name: Integration Tests (dotnet test)
+      run: dotnet test --no-restore --configuration Release Yeha.Api.IntegrationTests.csproj
+      working-directory: src/Yeha.Api.IntegrationTests
+    - name: Acceptance Tests (dotnet test)
+      run: dotnet test --no-restore --configuration Release Yeha.Api.AcceptanceTests.csproj
+      working-directory: src/Yeha.Api.AcceptanceTests
