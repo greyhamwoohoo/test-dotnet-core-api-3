@@ -1,0 +1,40 @@
+#
+# Builds and runs the tests using 'dotnet test' 
+#
+name: dotnet-test-dlls
+
+on:
+  push:
+    branches: [ master, dotnet-test-dlls ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.101
+
+    - name: Install dependencies
+      run: dotnet restore Yeha.sln
+      working-directory: src
+
+    - name: Build and Publish
+      run: dotnet publish --no-restore --configuration Release Yeha.sln
+      working-directory: src
+
+    - name: Unit Tests (dotnet test)
+      run: dotnet test Yeha.Api.UnitTests.dll
+      working-directory: src/Yeha.Api.UnitTests/bin/Release/netcoreapp3.1/publish
+
+    - name: Integration Tests (dotnet test)
+      run: dotnet test Yeha.Api.IntegrationTests.dll
+      working-directory: src/Yeha.Api.IntegrationTests/bin/Release/netcoreapp3.1/publish
+
+    - name: Acceptance Tests (dotnet test)
+      run: dotnet test Yeha.Api.AcceptanceTests.dll
+      working-directory: src/Yeha.Api.AcceptanceTests/bin/Release/netcoreapp3.1/publish
