@@ -63,7 +63,7 @@ jobs:
       shell: pwsh    
 
     - name: Publish Acceptance Test Results
-      if: succeeded() || failed()
+      if: ${{ success() || failure() }}
       uses: actions/upload-artifact@v2
       with:
         name: Acceptance-Test-Results
