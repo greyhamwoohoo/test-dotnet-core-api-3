@@ -1,11 +1,11 @@
 #
-# Builds and runs the tests using 'dotnet test' 
+# Builds and runs the test DLLs using 'dotnet test' 
 #
 name: dotnet-test-dlls
 
 on:
   push:
-    branches: [ master, dotnet-test-dlls ]
+    branches: [ master ]
 
 jobs:
   build:
