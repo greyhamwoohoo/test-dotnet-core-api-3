@@ -15,7 +15,16 @@ There are three YAML Builds included under the azure-devops folder:
 | ----- | ------ | ----------- |
 | pr.yml | N/A | Used for PR Builds. Runs the Unit, Integration and Acceptance Tests from the .csproj files using 'dotnet test' |
 | release-vstest.yml | [![Build Status](https://greyhamwoohoo.visualstudio.com/Public-Automation-Examples/_apis/build/status/Release-VsTest-Windows?branchName=master)](https://greyhamwoohoo.visualstudio.com/Public-Automation-Examples/_build/latest?definitionId=20&branchName=master) | Windows: Same as 'pr.yml' but also runs the tests from DLLs using the Visual Studio Test Runner |
-| release-dotnet-test-dlls.yml | [![Build Status](https://greyhamwoohoo.visualstudio.com/Public-Automation-Examples/_apis/build/status/test-dotnet-core-api-3-release-dotnet-test-linux?branchName=master)](https://greyhamwoohoo.visualstudio.com/Public-Automation-Examples/_build/latest?definitionId=21&branchName=master) | Linux: Runs tests and publishes results from test DLLs using dotnet test; containerizes the Api and runs the Acceptance Tests from the host *AGAINST* the Container. |
+| release-dotnet-test-dlls.yml | [![Build Status](https://greyhamwoohoo.visualstudio.com/Public-Automation-Examples/_apis/build/status/test-dotnet-core-api-3-release-dotnet-test-dlls?branchName=master)](https://greyhamwoohoo.visualstudio.com/Public-Automation-Examples/_build/latest?definitionId=21&branchName=master) | Linux: Runs tests and publishes results from test DLLs using dotnet test; containerizes the Api and runs the Acceptance Tests from the host *AGAINST* the Container. |
+
+## Github Workflows
+There are two YAML Workflows included under the .github folder:
+
+| Build | Status | Information |
+| ----- | ------ | ----------- |
+| pr.yml | N/A | Used for PR Builds. Runs the Unit, Integration and Acceptance Tests from the .csproj files using 'dotnet test' |
+| release-dotnet-test-dlls.yml | ![dotnet-test-dlls](https://github.com/greyhamwoohoo/test-dotnet-core-api-3/workflows/dotnet-test-dlls/badge.svg?branch=master) | Linux: Runs tests and publishes results from test DLLs using dotnet test; containerizes the Api and runs the Acceptance Tests from the host *AGAINST* the Container. |
+
 
 ## Docker
 The CI Docker Build will create a :candidate tagged container; and then wait for it to start; then run the Acceptance Tests against the docker image. 
