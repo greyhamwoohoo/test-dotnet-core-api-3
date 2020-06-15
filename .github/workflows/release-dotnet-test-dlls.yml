@@ -38,3 +38,33 @@ jobs:
     - name: Acceptance Tests (dotnet test)
       run: dotnet test Yeha.Api.AcceptanceTests.dll
       working-directory: src/Yeha.Api.AcceptanceTests/bin/Release/netcoreapp3.1/publish
+
+    - name: Build API Container
+      run: docker build -f azure-devops/Dockerfile src -t yeha-api:candidate
+      shell: pwsh
+
+    - name: Start API Container
+      run: docker run -d -p 5001:80 yeha-api:candidate    
+      shell: pwsh
+
+    - name: Wait for Container
+      run: ./azure-devops/wait-until-uri-is-ready.ps1 -TimeoutInSeconds 60 -Uri http://localhost:5001/api/diagnostics/ready -ExpectStatusCode 200 -Verbose
+      shell: pwsh
+
+    - name: Run Acceptance Tests against container
+      env:
+        YEHA_TEST_EXECUTION_CONTEXT: CI
+      run: mkdir $($env:HOME)/testResults |
+        dotnet test ./src/Yeha.Api.AcceptanceTests/bin/Release/netcoreapp3.1/publish/Yeha.Api.AcceptanceTests.dll --logger:"trx;LogFileName=$($env:HOME)/testResults/Container-Acceptance.trx"
+      shell: pwsh
+
+    - name: Dump filesystem contents
+      run: Get-ChildItem -Recurse
+      shell: pwsh    
+
+    - name: Publish Acceptance Test Results
+      if: succeeded() || failed()
+      uses: actions/upload-artifact@v2
+      with:
+        name: Acceptance-Test-Results
+        path: ~/testResults
