@@ -5,7 +5,7 @@ name: dotnet-test-dlls
 
 on:
   push:
-    branches: [ master, tests-container ]
+    branches: [ master ]
 
 jobs:
   build:
@@ -39,10 +39,6 @@ jobs:
       run: dotnet test Yeha.Api.AcceptanceTests.dll
       working-directory: src/Yeha.Api.AcceptanceTests/bin/Release/netcoreapp3.1/publish
 
-    - name: Dump filesystem contents
-      run: Get-ChildItem -Recurse
-      shell: pwsh    
-
     - name: Build API Container
       run: docker build -f azure-devops/Dockerfile src -t yeha-api:candidate
       shell: pwsh
@@ -58,5 +54,17 @@ jobs:
     - name: Run Acceptance Tests against container
       env:
         YEHA_TEST_EXECUTION_CONTEXT: CI
-      run: dotnet test ./src/Yeha.Api.AcceptanceTests/bin/Release/netcoreapp3.1/publish/Yeha.Api.AcceptanceTests.dll --logger:"trx;LogFileName=Container-Acceptance.trx"
+      run: mkdir $($env:HOME)/testResults |
+        dotnet test ./src/Yeha.Api.AcceptanceTests/bin/Release/netcoreapp3.1/publish/Yeha.Api.AcceptanceTests.dll --logger:"trx;LogFileName=$($env:HOME)/testResults/Container-Acceptance.trx"
       shell: pwsh
+
+    - name: Dump filesystem contents
+      run: Get-ChildItem -Recurse
+      shell: pwsh    
+
+    - name: Publish Acceptance Test Results
+      if: succeeded() || failed()
+      uses: actions/upload-artifact@v2
+      with:
+        name: Acceptance-Test-Results
+        path: ~/testResults
